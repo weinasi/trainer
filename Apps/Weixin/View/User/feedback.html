@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+ <head> 
+  <meta charset="utf-8" /> 
+  <title>反馈</title> 
+  <meta name="apple-mobile-web-app-capable" content="yes" /> 
+  <meta name="apple-touch-fullscreen" content="yes" /> 
+  <meta name="full-screen" content="no" /> 
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" /> 
+  <meta name="format-detection" content="telephone=no" /> 
+  <meta name="format-detection" content="address=no" /> 
+  <script src="__STATIC__/weixin/js/viewport.js"></script> 
+  <link href="__STATIC__/weixin/css/common.css" rel="stylesheet" /> 
+  <script src="__STATIC__/weixin/js/jquery-1.10.2.min.js"></script> 
+  <script src="__STATIC__/weixin/js/common.js"></script> 
+ </head> 
+ <body> 
+  <div class="feedback"> 
+   <div class="title">
+    <img src="__STATIC__/weixin/img/txt-yjfk.png" /> 
+    <a href="javascript:history.go(-1);" class="back"></a> 
+   </div> 
+    <div class="textarea cf"> 
+     <textarea class="content" name="feedback" rows="" maxlength="" cols="" placeholder="您的要求是我们努力的方向, 期待听到您的声音"></textarea> 
+     <p>还可以输入<b>10</b>字</p> 
+    </div> 
+    <a class="btn03 disabled">提交</a> 
+    <button class="btn03" style="display: none;">提交</button> 
+  </div>  
+  <script type="text/javascript">
+        wordLimit();
+        $(".btn03").click(function(){
+            var text = $('.content').val();
+            if(text == ''){
+                alert('请输入反馈内容');
+                return false;
+            }
+            
+            $.post("{:U('User/feedback')}",{content:text},function(data){
+            	if(data.status){
+            		alert(data.msg);
+            	}else{
+            		alert(data.msg);
+            	}
+            },'json')
+        });
+    </script> 
+ </body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+ <head> 
+  <meta charset="utf-8" /> 
+  <title>登陆</title> 
+  <meta name="apple-mobile-web-app-capable" content="yes" /> 
+  <meta name="apple-touch-fullscreen" content="yes" /> 
+  <meta name="full-screen" content="no" /> 
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" /> 
+  <meta name="format-detection" content="telephone=no" /> 
+  <meta name="format-detection" content="address=no" /> 
+  <script src="__STATIC__/weixin/js/viewport.js"></script> 
+  <link href="__STATIC__/weixin/css/common.css" rel="stylesheet" /> 
+  <script src="__STATIC__/weixin/js/jquery-1.10.2.min.js"></script> 
+  <script src="__STATIC__/weixin/js/common.js"></script> 
+ </head> 
+ <body> 
+  <div class="loginPage"> 
+   <div class="title">
+    <img src="__STATIC__/weixin/img/txt-denglu.png" />
+   </div> 
+   <img class="logo" src="__STATIC__/weixin/img/logo1.png" alt="" /> 
+   <ul class="cf"> 
+    <li> <label><img src="__STATIC__/weixin/img/ico01.png" /></label>
+     <input type="tel" name="phone" placeholder="请输入手机号" /> </li> 
+    <li>
+     <input type="text" name="captcha" placeholder="验证码" class="form-control" style="width: 260px;" /> 
+     {:show_verify_img('length=3&height=40&width=133&size=20')}
+    </li> 
+   </ul> 
+   <button class="submit">获取短信验证码</button> 
+   <p>点击登录，即表示您已同意<a href="#">《服务协议》</a></p> 
+  </div>  
+  <script type="text/javascript">
+   
+    $(".submit").click(function () {
+        $(".submit").attr("disabled", true);
+        var phone = $('input[name="phone"]').val();
+        var captcha = $('input[name="captcha"]').val();
+        var preurl = '{$preurl}';
+        if (phone == '') {
+            $(".submit").attr("disabled", false);
+            alert('手机号不能为空');
+            return false;
+        } else if (!/^((13[0-9])|147|(15[0-35-9])|(17[0-35-9])|180|181|182|183|184|(18[5-9]))[0-9]{8}$/.test(phone)) {
+            $(".submit").attr("disabled", false);
+            alert('手机号码格式不正确');
+            return false;
+        } else if (captcha == '') {
+            $(".submit").attr("disabled", false);
+            alert('验证码不能为空');
+            return false;
+        }
+        $.post("{:U('Login/login')}", {preurl:preurl,phone: phone, captcha: captcha}, function (data) {
+        	
+        	if (data.code == 0) {
+                alert(data.msg);
+                $(".submit").attr("disabled", false);
+            } else {
+                window.location.href = "{:U('Login/sendSms')}" + "/mobile/"+phone;
+            }
+        },'json');
+    });
+</script> 
+ </body>
+</html>

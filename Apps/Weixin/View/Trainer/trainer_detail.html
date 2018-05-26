@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+ <head> 
+  <meta charset="utf-8" /> 
+  <title>详情</title> 
+  <meta name="apple-mobile-web-app-capable" content="yes" /> 
+  <meta name="apple-touch-fullscreen" content="yes" /> 
+  <meta name="full-screen" content="no" /> 
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" /> 
+  <meta name="format-detection" content="telephone=no" /> 
+  <meta name="format-detection" content="address=no" /> 
+  <script src="__STATIC__/weixin/js/viewport.js"></script> 
+  <link href="__STATIC__/weixin/css/common.css" rel="stylesheet" /> 
+  <script src="__STATIC__/weixin/js/jquery-1.10.2.min.js"></script> 
+  <script src="__STATIC__/weixin/js/common.js"></script> 
+ </head> 
+ <body> 
+  <div class="coachShow"> 
+   <div class="coachTop"> 
+    <h3><img src="__STATIC__/weixin/img/txt-ckjl.png" /></h3> 
+    <p class="tx"> <span class="imgbg"><img src="{$info.avatar}" /> </span> </p> 
+    <h4>{$info.trainer_name}<span>| {$info.teaching_type}</span></h4> 
+    <div> 
+     <p class="star_32x22">
+      <s class="star{$info.trainer_id|getStar}"></s></p> 
+    </div> 
+    <a href="javascript:history.go(-1);" class="back"></a> 
+   </div> 
+   <div class="tabTit"> 
+    <ul class="cf"> 
+     <li class="hover" id="baseinfo"><span>基本信息</span>
+      <s></s></li> 
+     <li><a href="{:U('comment',array('id'=>$info[trainer_id]))}"><span>全部评价（{$info.comment}）</span></a>
+      <s></s></li> 
+    </ul> 
+   </div> 
+   <div class="baseInfo"> 
+    <h2><span class="tit1">教练简介</span></h2> 
+    <div class="xkpx"> 
+     <i></i> 
+     <ul> 
+      <volist name="info[introduction]" id="vo">
+       <li>{$vo} </li> 
+      </volist>
+     
+     </ul> 
+    </div> 
+    <p> <i class="spec1">{$info.play_ids}</i> <i class="spec3">{$info.level}</i> </p> 
+    <h2><span class="tit2">服务区域</span></h2> 
+    <div class="xkpx"> 
+     <i></i> 
+     <ul> 
+     <volist name="info[service_json]" id="vo">
+       <li>{$key}（{$vo}）</li> 
+      </volist>
+     </ul> 
+    </div> 
+    <h2><span class="tit3">预约时间段设置</span></h2> 
+    <div class="chooseTime"> 
+     <div class="scrollDate"> 
+      <ul class=""> 
+      <volist name="weeks" id="vo">
+       <li id="one{$key}" date="{$vo[d]}" onclick="setTab('one', {$key}, 7)" class="active">{$vo['w']}</li> 
+       </volist>
+       
+      </ul> 
+     </div> 
+     <volist name ='times' id="vo">
+      {$vo}
+     </volist>
+    
+    </div> 
+    <p class="red">注：只可选择连续的时间段,选择时间段为整点,如选择9:00<br />则为9:00-9:59 <br /><br /><br /></p> 
+   </div> 
+ 
+   <ul class="footBar2"> 
+    <li id="showprice">{$info.price}/小时</li> 
+    <li><a href="javascript:void(0);" id="booking">立即预约</a></li> 
+   </ul> 
+  </div>  
+
+  <script type="text/javascript">
+  $(function(){
+	 
+	  $('#baseinfo').click(function(){
+		  $(this).addClass('hover');
+		  $('#allcomment').removeClass('hover');
+		  $('.baseInfo').css('display','');
+		  $('.plList').css('display','none');
+	  })
+	  $('#allcomment').click(function(){
+		  $(this).addClass('hover');
+		  $('#baseinfo').removeClass('hover');
+		  $('.baseInfo').css('display','none');
+		  $('.plList').css('display','');
+	  })
+	 
+	
+	  
+  })
+$(".selected").click(function () {
+    $(".scrollTime li").each(function(i){
+        $(this).removeClass("active");
+    });
+});
+$("#booking").click(function () {
+    var dut_date = [];
+    $(".scrollTime li").each(function(i){
+        if($(this).hasClass('active')){
+            dut_date.push($(this).attr('value'));
+        }
+    });
+   // alert(dut_date);return ;
+    if(dut_date.length>0){
+    	var url = "{:U('Order/confirm')}";
+        var newurl = url+"/id/{$info.trainer_id}/dut_date/" + dut_date;
+        window.location.href = newurl;
+    }else{
+        alert("请至少选择一个预约时间段");
+    }
+});
+$(".chooseTime li").click(function () {
+    var html = "{$info.price}/小时";
+    setTimeout(function () {
+        var arrayObj = new Array();
+        var date='';
+        $(".scrollTime li").each(function(i){
+              if ( $(this).hasClass("active") ){
+                  arrayObj.push(parseInt($(this).html()));
+              }
+        });
+        $(".scrollDate li").each(function(i){
+              if ( $(this).hasClass("active") ){
+                  date  = $(this).attr("date");
+              }
+        });        
+        var max = Math.max.apply(null, arrayObj);//最大值
+        var min = Math.min.apply(null, arrayObj);//最小值
+        if(arrayObj.length==0){
+            $("#showprice").html(html);
+        }else if(arrayObj.length==1){
+            $("#showprice").html(date+" "+max+":00至"+max+":59");
+        }else{
+            $("#showprice").html(date+" "+min+":00至"+max+":59");
+        }
+    }, 1);
+});
+$(".scrollTime").each(function () {
+    $(this).children('li').click(function () {
+        hasActive = 0;
+        $(this).parent().children('li').each(function () {
+            var cls = $(this).attr('class');
+           // console.log($(this).parent().html())
+            if (cls == 'active') {
+                hasActive = 1;
+            }
+        })
+        var mycls = $(this).attr('class');
+       // alert(mycls);
+        var myclsL = $(this).prev().attr('class');
+        var myclsR = $(this).next().attr('class');
+        if (mycls == 'disable') {
+           // console.log("有disable")
+            return false;
+        } else {
+            if (mycls == 'active') {
+                if (myclsL == 'active' && myclsR == 'active') {
+                    return false;
+                } else {
+                    $(this).removeClass('active');
+                }
+            } else {
+               // console.log("没有+")
+                $(this).addClass('active');
+                if (myclsL && myclsL != 'disable' || myclsR && myclsR != 'disable') {
+                    $(this).addClass('active');
+                } else {
+                    if (!hasActive) {
+                        $(this).addClass('active');
+                    } else {
+                        $(this).removeClass('active');
+                        alert('请选择连续的时间段!');
+                    }
+                }
+            }
+        }
+    });
+});
+</script> 
+ </body>
+</html>

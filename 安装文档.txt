@@ -1,0 +1,5 @@
+1、导入trainer.sql数据库文件，修改Apps/Common/Conf/config,php 里数据库信息
+2、管理后台地址：域名/index.php/Admin  账号密码:admin  123456
+3、其它功能入库地址：活动入口：域名/index.php/Activity,详细情况Apps/Weixin/Controller/WeixinController.class.php微信处理程序菜单设置
+4、本系统为意象网络工作室开发，版权所有，我们全称技术支持直到上线运营
+4、如有二次开发需要请联系我们

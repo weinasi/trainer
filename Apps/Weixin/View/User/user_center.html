@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+ <head> 
+  <meta charset="utf-8" /> 
+  <title>个人中心</title> 
+  <meta name="apple-mobile-web-app-capable" content="yes" /> 
+  <meta name="apple-touch-fullscreen" content="yes" /> 
+  <meta name="full-screen" content="no" /> 
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" /> 
+  <meta name="format-detection" content="telephone=no" /> 
+  <meta name="format-detection" content="address=no" /> 
+  <script src="__STATIC__/weixin/js/viewport.js"></script> 
+  <link href="__STATIC__/weixin/css/common.css" rel="stylesheet" /> 
+  <script src="__STATIC__/weixin/js/jquery-1.10.2.min.js"></script> 
+  <script src="__STATIC__/weixin/js/common.js"></script> 
+  <style type="text/css">
+    .tx{position: relative;}
+    #j-file{opacity:0;filter:alpha(opacity=0);height: 180px;width: 180px;position: absolute;top: 0;left: 0;z-index: 9;}
+</style>
+ </head>  
+ <body class="bg1"> 
+  <div class="my"> 
+   <div class="top"> 
+    <h2><img src="__STATIC__/weixin/img/txt-wddp.png" /></h2> 
+    <div class="tx"> 
+     <empty name="user.my_avatar">
+     <img src="__STATIC__/weixin/img/avatar.jpg" id="avatar" /> 
+     <input type="file" id="j-file" name="avatar" /> 
+     <else />
+     <img src="{$user.my_avatar}"  /> 
+     </empty>
+    </div> 
+    <div class="txt">
+     （{$user.mobile}）
+     <a href="{:U('User/set')}" class="btn01">设置</a>
+    </div> 
+   </div> 
+   <ul class="myUl"> 
+    <li> <a><img src="__STATIC__/weixin/img/page24/ico-1.png" />积分<span class="">{$user.points}分</span></a> </li> 
+    <li> <a href="{:U('User/coupon')}"><img src="__STATIC__/weixin/img/page24/ico-2.png" />优惠券<span class="arr-r">{$user.coupon_num}张</span></a> </li> 
+    <li> <a href="{:U('User/score')}"><img src="__STATIC__/weixin/img/page24/ico-3.png" />综合评分</a> </li>  
+    <li> <a href="{:U('User/about')}"><img src="__STATIC__/weixin/img/page24/ico-5.png" />关于我们</a> </li> 
+   </ul> 
+   <a href="{:U('Login/loginOut')}" class="btn03">退出登录</a> 
+   <a href="tel:1500000000" class="btn04"><span>客服电话：1500000000</span></a> 
+   <div class="footBar"> 
+    <ul class="cf"> 
+     <li class=""><a href="{:U('Trainer/index')}"><span class="fn1"></span><b>预约</b></a></li> 
+     <li class=""><a href="{:U('User/orderList')}"><span class="fn2"></span><b>我的订单</b></a></li> 
+     <li class="active"><a href="{:U('User/index')}"><span class="fn3"></span><b>个人中心</b></a></li> 
+    </ul> 
+   </div> 
+  </div>  
+
+<script type="text/javascript">
+  window.onload = function(){
+    // 选择图片
+    document.getElementById('j-file').onchange = function(event){
+        var img = event.target.files[0];
+
+        // 判断是否图片
+        if(!img){
+            return ;
+        }
+
+        // 判断图片格式
+        if(!(img.type.indexOf('image')==0 && img.type && /\.(?:jpg|png|gif)$/.test(img.name)) ){
+            alert('图片只能是jpg,gif,png');
+            return ;
+        }
+
+        var reader = new FileReader();
+        reader.readAsDataURL(img);
+		
+        reader.onload = function(e){ // reader onload start
+            // ajax 上传图片
+			var get_url = "{:u('User/uploadAvatar')}";
+            $.post(get_url, { img: e.target.result},function(ret){	
+               if(ret.img!=''){
+					$("#avatar").attr('src',ret.img);
+                }else if(ret.msg!=""){
+					alert(ret.msg);
+				}else{
+                    alert('图片上传失败！');
+                }
+            },'json');
+        } // reader onload end
+    }
+
+  }
+  
+  </script>
+ </body>
+</html>

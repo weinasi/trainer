@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+ <head> 
+  <meta charset="utf-8" /> 
+  <title>评论</title> 
+  <meta name="apple-mobile-web-app-capable" content="yes" /> 
+  <meta name="apple-touch-fullscreen" content="yes" /> 
+  <meta name="full-screen" content="no" /> 
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" /> 
+  <meta name="format-detection" content="telephone=no" /> 
+  <meta name="format-detection" content="address=no" /> 
+  <script src="__STATIC__/weixin/js/viewport.js"></script> 
+  <link href="__STATIC__/weixin/css/common.css" rel="stylesheet" /> 
+  <script src="__STATIC__/weixin/js/jquery-1.10.2.min.js"></script> 
+  <script src="__STATIC__/weixin/js/common.js"></script> 
+ </head> 
+ <body> 
+  <div class="coachShow"> 
+   <div class="coachTop"> 
+    <h3><img src="__STATIC__/weixin/img/txt-ckjl.png" /></h3> 
+    <p class="tx"> <span class="imgbg"> { <img src="__STATIC__/weixin/img/2733aafe044cb5a7b98a7dc4fb826dcf.jpg" /> </span> </p> 
+     <h4>{$info.trainer_name}<span>| {$info.teaching_type}</span></h4> 
+    <div> 
+     <p class="star_32x22">
+      <s class="star5"></s></p> 
+    </div> 
+    <a href="javascript:history.go(-1);" class="back"></a> 
+   </div> 
+   <div class="tabTit"> 
+    <ul class="cf"> 
+     <li><a href="{:U('detail',array('id'=>$info[trainer_id]))}"><span>基本信息</span></a>
+      <s></s></li> 
+     <li class="hover"><span>全部评价（{$info.comment}）</span>
+      <s></s></li> 
+    </ul> 
+   </div> 
+   <div class="plList"> 
+    <ul> 
+     <volist name ="comment" id="vo">
+     <li> <h4 class="star_32x22">
+       <s class="star{$vo.star}"></s></h4> <p>{$vo.content}</p> <h5>{$vo.user_nickname}<b>{$vo.time|date='Y-m-d H:i',###}</b></h5>
+     </li>
+     </volist> 
+    </ul> 
+   </div> 
+   <ul class="footBar2"> 
+    <li>{$info.price}/小时</li> 
+    <li><a href="{:U('detail',array('id'=>$info[trainer_id]))}">立即预约</a></li> 
+   </ul> 
+  </div> 
+  <div id="pages" style="display:none"> 
+  </div> 
+  <link rel="stylesheet" type="text/css" href="__STATIC__/weixin/plug/dropload/dropload.css" /> 
+  <script src="__STATIC__/weixin/plug/dropload/dropload.min.js"></script> 
+  <script>
+$(function () {
+	var numpage = 0;
+    $('.coachShow').dropload({
+        scrollArea: window,
+        loadDownFn: function (me) {
+        	var url = "{:U('Trainer/getComment')}";
+        	var id = {$info.trainer_id};
+        	numpage = numpage+5;
+            if (url) {
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data:{id:id,numpage:numpage},
+                    dataType: 'json',
+                    success: function (data) {
+                        var result = '';
+                        $("#pages").html(data.pages);
+                        if (data.data.length > 0) {
+                        	 $.each(data.data, function (i, item) {
+                                 result += '<li class="opacity">';
+                                 result += '<h4 class="star_32x22"><s class="star' + item.star + '"></s></h4>';
+                                 result += '<p>' + item.content + '</p>';
+                                 result += '<h5>' + item.user_nickname + '<b>' + item.time + '</b></h5>';
+                                 result += '</li>';
+                             });
+                        } else {
+                        	
+                        	 me.resetload();
+                             $(".dropload-refresh").html("没有数据了");
+                           // me.lock();
+                           // me.noData();
+                            return false;
+                        }
+                        $(".dropload-down").css('paddingBottom', 88 + 'px')
+                        setTimeout(function () {
+                            $('.plList ul').append(result);
+                            imgBg();
+                            me.resetload();
+                        }, 1000);
+                    },
+                    error: function (xhr, type) {
+                        me.resetload();
+                        $(".dropload-refresh").html("没有数据了");
+                    }
+                });
+            } else {
+                me.resetload();
+                $(".dropload-refresh").html("没有数据了");
+            }
+        }
+    });
+});
+    </script>  
+ </body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+ <head> 
+  <meta charset="utf-8" /> 
+  <title>教练登陆入口</title> 
+  <script src="__STATIC__/weixin/js/viewport.js"></script> 
+  <link href="__STATIC__/weixin/css/common.css" rel="stylesheet" /> 
+ </head> 
+ <body> 
+  <div class="loginPage"> 
+   <div class="title">
+    <img src="__STATIC__/weixin/img/txt-denglu.png" />
+   </div> 
+   <img class="logo" src="__STATIC__/weixin/img/logo1.png" alt="" /> 
+    <ul class="cf"> 
+     <li> <label><img src="__STATIC__/weixin/img/ico01.png" /></label> <input type="text" name="phone" value="" placeholder="请输入手机号" /> </li> 
+     <li> <label><img src="__STATIC__/weixin/img/ico02.png" /></label> <input type="password" name="password" placeholder="请输入密码" /> </li> 
+    </ul> 
+    <button id="submit-btn">登 录</button> 
+   <p>点击登录，即表示您已同意<a href="{:U('Weixin/User/protocol')}">《服务协议》</a></p> 
+  </div>   
+  <script src="__STATIC__/weixin/js/jquery-1.10.2.min.js"></script> 
+  <script src="__STATIC__/weixin/js/common.js"></script> 
+  <script type="text/javascript">
+        $('#submit-btn').click(function(){
+        	 var password = $('input[name="password"]').val();
+             var phone = $('input[name="phone"]').val();
+             if (phone == '') {
+                 alert('手机号不能为空');
+                 return false;
+             } else if (!/^((13[0-9])|147|(15[0-35-9])|(17[0-35-9])|180|181|182|183|184|(18[5-9]))[0-9]{8}$/.test(phone)) {
+                 alert('手机号码不正确');
+                 return false;
+             } else if (password == '') {
+                 alert('请输入密码');
+                 return false;
+             }
+             $.ajax({
+                 type: "POST",
+                 url: "{:U('Login/Login')}",
+                 dataType:'json',
+                 data: {phone: phone,password: password},
+                 success: function(data){
+                     if (data.code) {
+                         location.href="{:U('Index/index')}";
+                     } else {
+                    	 alert(data.msg);
+                     }
+                 }
+             });
+        })                                                            
+
+</script> 
+ </body>
+</html>/html>

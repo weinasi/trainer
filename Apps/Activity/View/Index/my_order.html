@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+ <head> 
+  <meta charset="utf-8" /> 
+  <title>我的活动订单</title> 
+  <meta name="apple-mobile-web-app-capable" content="yes" /> 
+  <meta name="apple-touch-fullscreen" content="yes" /> 
+  <meta name="full-screen" content="no" /> 
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" /> 
+  <meta name="format-detection" content="telephone=no" /> 
+  <meta name="format-detection" content="address=no" /> 
+  <script src="__STATIC__/weixin/js/viewport.js"></script> 
+  <link href="__STATIC__/weixin/css/common.css" rel="stylesheet" /> 
+  <script src="__STATIC__/weixin/js/jquery-1.10.2.min.js"></script> 
+  <script src="__STATIC__/weixin/js/common.js"></script> 
+  <style>
+	.btn-del {
+	  height: 49px;
+	  line-height: 49px;
+	  background-color: #c00812;
+	  display: inline-block;
+	  border-radius: 5px;
+	  padding: 0 20px;
+	  text-align: center;
+	  color: #fff;
+	  font-size: 26px;
+	  border: none;
+	  background: #fff;
+	  color: #c00812;
+	  border: 1px solid #c00812;
+	}
+	</style>
+ </head> 
+ <body> 
+  <div class="order"> 
+   <div class="title">
+    <img src="__STATIC__/weixin/img/txt-dd.png" />
+   </div> 
+   <div class="tabTit"> 
+   </div> 
+   <div class="tabCon"> 
+    <empty name="order">
+      <div class="noOrder" style="height: 995px;">
+          <img src="__STATIC__/weixin/img/ico-order.png">
+          <p>没有找到相关订单</p>
+       </div>
+    <else />
+    <ul> 
+    <volist name="order" id="vo">
+     <li> <h3>{$vo.add_time|date='Y-m-d H:i',###} 
+	        <eq name="vo.status" value="1"><span>已报名</span></eq>
+        </h3> <a href="#"> 
+       <div class="bg"> 
+        <div class="l"> 
+         <span> <img src="{$vo.imgurl}" /> </span> 
+        </div> 
+        <div class="c"> 
+         <h4>{$vo.activity_name}</h4> 
+         <h4><b>{$vo.place}</b></h4> 
+        </div> 
+       </div> </a> 
+      <div class="price">
+       合计金额:
+       <b>￥{$vo.total_fee}元</b>
+      </div> 
+      <div class="btnGroup"> 
+	       <eq name="vo.status" value="1">
+	       <a orderid="{$vo[order_id]}" href="javascript:void(0)" class="btn-cancel ">删除订单</a> 
+	       <a href="#" class="btn-pay">　已报名　</a> 
+	       </eq>
+      </div> 
+      <div class="blank"></div> </li> 
+      </volist>
+    </ul> 
+    </empty>
+   </div> 
+   <div class="footBar"> 
+    <ul class="cf"> 
+     <li class=""><a href="{:U('Index/index')}"><span class="fn1"></span><b>预约</b></a></li> 
+     <li class="active"><a href="{:U('Index/myorder')}"><span class="fn2"></span><b>我的订单</b></a></li> 
+     <li class=""><a href="{:U('Weixin/User/index')}"><span class="fn3"></span><b>个人中心</b></a></li> 
+    </ul> 
+   </div> 
+  </div> 
+  <div id="pages" style="display:none"> 
+  </div> 
+ <notempty name="order">
+  <link rel="stylesheet" type="text/css" href="__STATIC__/weixin/plug/dropload/dropload.css" /> 
+  <script src="__STATIC__/weixin/plug/dropload/dropload.min.js"></script> 
+  <script type="text/javascript">
+setTimeout(function () {
+    $(".dropload-down").css('paddingBottom', 88 + 'px');
+}, 1);
+$(function () {
+    
+    //取消订单
+    $('.tabCon').delegate('.btn-cancel','click',function(){
+    	var orderid = $(this).attr('orderid');
+    	//alert(orderid);
+    	if(confirm('是否确定删除订单？')){
+    		cancelOrder(orderid);
+    	}
+    	
+    })
+    
+
+    
+});
+
+function cancelOrder(id){
+    $.post("{:U('Index/orderCancel')}",{orderid:id},function(data){
+    	//alert();
+			if(data.status == 1){
+				window.location.reload();
+			}else{
+				alert(data.msg);
+			}
+    },'json');
+}
+
+
+
+</script>  
+</notempty>
+ </body>
+</html>

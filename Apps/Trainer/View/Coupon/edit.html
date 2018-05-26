@@ -1,0 +1,40 @@
+<extend name="Public/main" />
+
+<block name="body">
+	<div class="wrap jj">
+		<include file="Public/nav"/>
+		<div class="common-form">
+			<form method="post" class="J_ajaxForm" action="{:U('edit')}">
+				<div class="h_a">优惠券信息</div>
+				<div class="table_list">
+					<table cellpadding="0" cellspacing="0" class="table_form" width="100%">
+						<tbody>
+							<tr>
+								<td width="140">优惠券名称:</td>
+								<td><input type="text" class="input" name="info[coupon_name]" value="{$info.coupon_name}"></td>
+							</tr>
+							<tr>
+								<td width="140">面值:</td>
+								<td><input type="text" class="input" name="info[price]" value="{$info.price}"></td>
+							</tr>
+							<eq name="info.type" value="1">
+							<tr>
+								<td width="140">截止日期:</td>
+								<td>
+								<input type="text"  name="info[end_time]"  value="{$info.end_time|date='Y-m-d H:i:s',###}"  class="input length_3 J_datetime ">
+								</td>
+							</tr>
+							</eq>
+						</tbody>
+					</table>
+				</div>
+				<div class="">
+					<div class="btn_wrap_pd">
+					    <input type="hidden" name="id" value="{$info.coupon_id}">
+						<button class="btn btn_submit mr10 J_ajax_submit_btn" type="submit">修改</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</block>

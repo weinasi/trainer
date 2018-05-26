@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+ <head> 
+  <meta charset="utf-8" /> 
+  <title>订单确认</title> 
+  <meta name="apple-mobile-web-app-capable" content="yes" /> 
+  <meta name="apple-touch-fullscreen" content="yes" /> 
+  <meta name="full-screen" content="no" /> 
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" /> 
+  <meta name="format-detection" content="telephone=no" /> 
+  <meta name="format-detection" content="address=no" /> 
+  <script src="__STATIC__/weixin/js/viewport.js"></script> 
+  <link href="__STATIC__/weixin/css/common.css" rel="stylesheet" /> 
+  <script src="__STATIC__/weixin/js/jquery-1.10.2.min.js"></script> 
+  <script src="__STATIC__/weixin/js/common.js"></script> 
+ </head> 
+ <body> 
+  <div class="dingCoach"> 
+   <div class="coachTop"> 
+    <h3><img src="__STATIC__/weixin/img/txt-ddqr.png" /></h3> 
+    <h4><span>{$info.trainer_name}</span><b>{$info.teaching_type}</b></h4> 
+    <p class="star_32x22">
+     <s class="star{$info.trainer_id|getStar}"></s></p> 
+    <div class="imgbg">
+    
+     <img src="{$info.avatar}" /> 
+    </div> 
+    <a href="javascript:history.go(-1);" class="back"></a> 
+   </div> 
+   <div class="form"> 
+    <ul> 
+     <li> <label>预约时间</label> 
+      <volist name="ordertime" id="vo">
+     	 <input type="text" readonly="" value="{$vo}" /> 
+      </volist>
+      
+      </li> 
+     <li> <label>训练人数 </label> 
+       <i class="active calculate">1人</i>
+        <i class="calculate">2人</i> 
+        <i class="calculate">3人</i>
+        <i class="calculate">4人</i>
+        <input type="hidden" value="1" id="usernum" /> 
+     </li> 
+     <li> <label>训练地点</label> <input type="text" id="train_place" /> </li> 
+     <li> <label>我的电话</label> <input type="text" value="{$phone}" readonly="" /> </li> 
+     <li> <label>留言</label> <textarea id="remarks" placeholder="我的留言"></textarea> </li> 
+     <li class="row"> <p class="cf"> <label>总计</label> <input type="text" value="{$info.price}元" readonly="" id="total_money" /> </p>
+	      <p class="cf" style=""> <label>优惠券</label> 
+	      <span class="ticket">请选择优惠券</span> 
+	      <!-- <b class="ticketTxt" value="20">首单满150元立减20元</b> --> 
+	      <input value="0" type="hidden" id="couponid" /> 
+	      </p> 
+     </li> 
+     <li class="row"> <p class="cf"> <label>实付</label> <input type="text" value="{$info.price}元" readonly="" id="actual_pay" /> </p> </li> 
+    </ul> 
+   </div> 
+   <button class="btn03" id="dosubmit">确认</button> 
+  </div> 
+  <div class="float_yuyue"> 
+   <div class="inner"> 
+    <h1><img src="__STATIC__/weixin/img/page5/yuyueico.png" />预约成功</h1> 
+    <h2>重要提示：</h2> 
+    <p>如果您因故不能参加训练，可以取消或变更订单，训练开始前4小时以内不能取消、变更，如果没有在规定时限内取消、变更订单，或者没有取消订单造成爽约的，需要支付教练的交通费
+     <c style="color:red">
+      50元
+     </c>。</p> 
+    <div class="btnGroup pay"> 
+     <a href="#" id="shaohou">稍后支付</a> 
+     <a href="#" id="liji">立即支付</a> 
+    </div> 
+   </div> 
+  </div> 
+  <div class="floatTicket"> 
+   <div class="inner"> 
+    <h2>使用优惠券<a href="javascript:;" class="calculate">确认</a></h2> 
+    <ul class="cf"> 
+     <volist name="coupon" id="vo">
+     <li>
+      <span value="{$vo.price}" couponid="{$vo.coupon_id}">{$vo.coupon_name}</span>
+          <eq name="vo.type" value="0">有效期：永久</eq>
+          <eq name="vo.type" value="1">截止日期:{$vo.end_time|date='Y-m-d H:i',###}</eq>
+      </li> 
+     </volist>
+    </ul> 
+   </div> 
+  </div>  
+ <script>
+    $(".calculate").click(function () {
+        setTimeout(function () {
+            var is_first_order = "1";
+            var prices = "{$info.price}";
+            var hour_num = "1";
+            var usernum = parseFloat($("#usernum").val());
+            var now_prices = parseFloat(prices) + parseFloat((usernum - 1) * (prices * 0.1));
+            //if (hour_num > 2) {
+            //    var last_prices = parseFloat(hour_num - 2) * (now_prices * 0.5) + parseFloat(now_prices * 2);
+            //} else {
+                var last_prices = now_prices * hour_num;
+            //}
+            var coupon = 0;
+            var couponid = 0;
+            var change_money = "0";
+            $(".floatTicket li").each(function () {
+                if ($(this).hasClass('active')) {
+                    coupon = parseFloat($(this).find('span').attr("value"));
+                    couponid = parseFloat($(this).find('span').attr("couponid"));
+                }
+            });
+            if (couponid == 0) {
+                $(".ticket").html("请选择优惠券");
+            }
+            $("#total_money").val(last_prices.toFixed(2) + "元");
+            var actual_pay = is_first_order == 1 && last_prices>=150 ? last_prices - 20 : last_prices;
+            var msg = "";
+            if (actual_pay > change_money) {
+                actual_pay = parseFloat(actual_pay) - parseFloat(change_money);
+            } else if (actual_pay < change_money) {
+                msg = ",退还" + parseFloat(parseFloat(change_money) - parseFloat(actual_pay)).toFixed(2) + "元"
+                actual_pay = 0;
+            } else {
+                actual_pay = 0;
+            }
+            if (actual_pay < coupon) {
+                alert('实付金额必须大于优惠券金额');
+                $(".ticket").html("请选择优惠券");
+                $("#couponid").val(0);
+                $(".floatTicket li").removeClass("active");
+            } else {
+                actual_pay = actual_pay - coupon;
+            }
+            $("#actual_pay").val(actual_pay.toFixed(2) + "元" + msg);
+            $("#couponid").val(couponid);
+            $(".ticketTxt").remove();
+            if(is_first_order == 1 && last_prices>=150){
+                $(".ticket").after("<b class='ticketTxt' value='20'>首单满150元立减20元</b>");
+            }
+        }, 1);
+    });
+    $("#dosubmit").click(function () {
+        if (!$("#dosubmit").hasClass('disabled')) {
+            $("#dosubmit").addClass("disabled");
+            var usernum = $("#usernum").val();
+            var couponid = $("#couponid").val();
+            var train_place = $("#train_place").val();
+            var remarks = $("#remarks").val();
+            var dut_date = "{$timetext}";
+            var trainer_id = {$trainer_id};
+            var phone = "{$phone}";
+            var actual_pay = $('#actual_pay').val();
+            if (train_place == '') {
+                alert("请填写训练地点");
+                $("#dosubmit").removeClass("disabled");
+            } else {
+                $.post("{:U('Order/saveOrder')}", 
+				{actual_pay:actual_pay,train_place: train_place, remarks: remarks, usernum: usernum, couponid: couponid, dut_date: dut_date, trainer_id: trainer_id,phone:phone},
+				function (data) {
+                    if (data.status == 0) {
+                        alert(data.msg);
+                    } else if (data.status == 1) {
+                        $("#shaohou").attr("href", "{:U('User/orderList')}");
+                        $("#liji").attr("href", data.url);
+                        $(".float_yuyue").show();
+                    }
+                },"json");
+            }
+        } else {
+            alert('正在添加，请稍等！');
+        }
+    });
+</script> 
+ </body>
+</html>> 
+ </body>
+</html>      

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+ <head> 
+  <meta charset="utf-8" /> 
+  <title>活动列表</title> 
+  <meta name="apple-mobile-web-app-capable" content="yes" /> 
+  <meta name="apple-touch-fullscreen" content="yes" /> 
+  <meta name="full-screen" content="no" /> 
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" /> 
+  <meta name="format-detection" content="telephone=no" /> 
+  <meta name="format-detection" content="address=no" /> 
+  <script src="__STATIC__/weixin/js/viewport.js"></script> 
+  <link href="__STATIC__/weixin/css/common.css" rel="stylesheet" /> 
+  <script src="__STATIC__/weixin/js/jquery-1.10.2.min.js"></script> 
+  <script src="__STATIC__/weixin/js/common.js"></script> 
+ </head> 
+ <body class="bg1"> 
+  <div class="wrap_course"> 
+   <div class="title">
+    <img src="__STATIC__/weixin/img/txt-xkpx.png" /> 
+   </div> 
+   <div class="couseList"> 
+    <ul> 
+    <volist name="list" id="vo">
+     <li> <a href="{:U('Index/detail',array('id'=>$vo[activity_id]))}"> 
+       <div class="imgbg">
+        <img src="{$vo.imgurl}" />
+       </div> 
+       <div class="txt"> 
+        <h3>{$vo.activity_name}（<eq name="vo.type" value="1">新客户<else />老客户</eq>）</h3> 
+        <span class="price"><i>&yen;</i>{$vo.price}<b>/人</b></span> 
+        <p><span class="date">{$vo.start_time|date='Y-m-d H:s',###} - {$vo.end_time|date='Y-m-d H:s',###}</span></p> 
+       </div> </a> </li> 
+      </volist>
+    </ul> 
+    <input type="hidden" class="page" value="1" /> 
+   </div> 
+   <div class="footBar"> 
+    <ul class="cf"> 
+     <li class=" active  "><a href="{:U('Index/index')}"><span class="fn1"></span><b>预约</b></a></li> 
+     <li class=""><a href="{:U('Index/myorder')}"><span class="fn2"></span><b>小课订单</b></a></li> 
+     <li class=""><a href="{:U('Weixin/User/index')}"><span class="fn3"></span><b>我的</b></a></li> 
+    </ul> 
+   </div> 
+  </div>  
+  <link rel="stylesheet" type="text/css" href="__STATIC__/weixin/plug/dropload/dropload.css" /> 
+  <script src="__STATIC__/weixin/plug/dropload/dropload.min.js"></script> 
+  <script>
+            setTimeout(function () {
+                $(".dropload-down").css('paddingBottom', 37 + 'px');
+            }, 1);
+            $(function () {
+                $('.wrap_course').dropload({
+                    scrollArea: window,
+                    loadDownFn: function (me) {
+                    }
+                });
+            });
+        </script> 
+ </body>
+</html>

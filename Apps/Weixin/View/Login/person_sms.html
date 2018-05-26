@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+ <head> 
+  <meta charset="utf-8" /> 
+  <title>短信验证</title> 
+  <meta name="apple-mobile-web-app-capable" content="yes" /> 
+  <meta name="apple-touch-fullscreen" content="yes" /> 
+  <meta name="full-screen" content="no" /> 
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" /> 
+  <meta name="format-detection" content="telephone=no" /> 
+  <meta name="format-detection" content="address=no" /> 
+  <script src="__STATIC__/weixin/js/viewport.js"></script> 
+  <link href="__STATIC__/weixin/css/common.css" rel="stylesheet" /> 
+  <script src="__STATIC__/weixin/js/jquery-1.10.2.min.js"></script> 
+  <script src="__STATIC__/weixin/js/common.js"></script> 
+ </head> 
+ <body> 
+  <div class="loginPage"> 
+   <div class="title">
+    <img src="__STATIC__/weixin/img/txt-denglu.png" />
+   </div> 
+   <img class="logo" src="__STATIC__/weixin/img/logo1.png" alt="" /> 
+   <ul class="cf"> 
+    <li> <input type="tel" value="{$testcode}" name="code" placeholder="请输入短信验证码" style="width: 350px" /> <span>剩余时间<b id="mes">60</b>秒</span> </li> 
+   </ul> 
+   <button class="submit">登录</button> 
+   <p>点击登录，即表示您已同意<a href="../wechat/protocol">《服务协议》</a></p> 
+  </div>  
+  <script type="text/javascript">
+    var i = 60;
+    var intervalid;
+    intervalid = setInterval("fun()", 1000);
+    //var mobile = {$phone};
+    function fun() {
+        if (i == 0) {
+           // $.post("{:U('Login/sendSms')}", {mobile:mobile}, function (data) {
+             window.location.href = "{:U('Login/login')}";
+            //});
+            clearInterval(intervalid);
+        }
+        document.getElementById("mes").innerHTML = i;
+        i--;
+    }
+    $(".submit").click(function () {
+        var code = $('input[name="code"]').val();
+        if(code==''){
+            alert("请输入短信验证码！");
+            return false;
+        }
+       // var url = "../wechat/info?id=3"?"../wechat/info?id=3":"../wechat";
+        var mobile = "{$phone}";
+        $.post("{:U('Login/verifySms')}", {mobile: mobile,code:code}, function (data) {
+            if (data.status == 0) {
+                alert(data.msg);
+            }else{
+                window.location.href = data.url;
+            }
+        },'json');
+    });
+</script> 
+ </body>
+</html>/html>

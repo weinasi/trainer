@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+ <head> 
+  <meta charset="utf-8" /> 
+  <title>{$site_name}</title> 
+  <meta name="apple-mobile-web-app-capable" content="yes" /> 
+  <meta name="apple-touch-fullscreen" content="yes" /> 
+  <meta name="full-screen" content="no" /> 
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" /> 
+  <meta name="format-detection" content="telephone=no" /> 
+  <meta name="format-detection" content="address=no" /> 
+  <script src="__STATIC__/weixin/js/viewport.js"></script> 
+  <link href="__STATIC__/weixin/css/common.css" rel="stylesheet" /> 
+  <script src="__STATIC__/weixin/js/jquery-1.10.2.min.js"></script> 
+  <script src="__STATIC__/weixin/js/common.js"></script> 
+ </head> 
+ <body> 
+  <div class="chooseCoach"> 
+   <div class="title">
+    <img src="__STATIC__/weixin/img/txt-xzjl.png" />
+   </div> 
+   <ul class="filterBar cf"> 
+    <li><span id="myarea">区域</span> 
+     <div> 
+      <a href="javascript:;" name="area" value="" class="area active">所有</a> 
+      <volist name="area" id="vo">
+       <a href="javascript:;"  value="{$vo.area_name}" class="area">{$vo.area_name}</a>
+      </volist> 
+      
+     </div> </li> 
+    <li><span id="myplay">打法</span> 
+     <div> 
+      <a href="javascript:;" value="" name="play" class="play active">所有</a> 
+      <volist name="play" id="vo">
+       <a href="javascript:;" name="play" value="{$vo.play_id}" class="play">{$vo.play_name}</a> 
+      </volist>
+     </div> </li> 
+    <li><span id="mysex">性别</span> 
+     <div> 
+      <a href="javascript:;" name="sex" value="" class="sex active">所有</a> 
+      <a href="javascript:;" name="sex" value="1" class="sex">男</a> 
+      <a href="javascript:;" name="sex" value="2" class="sex">女</a> 
+     </div> </li> 
+    <li><span id="mytime">时间</span> 
+     <div> 
+      <a href="javascript:;" name="week" value="" class="mytime active">所有</a> 
+      <a href="javascript:;" name="week" value="周一至日" class="mytime">周一至周日</a> 
+      <a href="javascript:;" name="week" value="周一至五" class="mytime">周一至周五</a> 
+      <a href="javascript:;" name="week" value="周六、日" class="mytime">周六、周日</a> 
+     </div> </li> 
+    <li><span id="myprice">价格</span> 
+     <div> 
+      <a href="javascript:;" name="last_price" value="" class="myprice active">所有</a> 
+      <a href="javascript:;" name="last_price" value="1" class="myprice">200以上</a> 
+      <a href="javascript:;" name="last_price" value="2" class="myprice">100~200</a> 
+      <a href="javascript:;" name="last_price" value="3" class="myprice">100以下</a> 
+     </div> </li> 
+   </ul> 
+   <ul class="coachList"> 
+
+    
+    
+   </ul> 
+   <div class="footBar"> 
+    <ul class="cf"> 
+     <li class="active"><a href="index.php?m=Weixin&c=Trainer&a=index&mc_id={$mc_id}"><span class="fn1"></span><b>预约</b></a></li> 
+     <li class=""><a href="{:U('User/orderList')}"><span class="fn2"></span><b>我的订单</b></a></li> 
+     <li class=""><a href="{:U('User/index')}"><span class="fn3"></span><b>个人中心</b></a></li> 
+    </ul> 
+   </div> 
+  </div> 
+
+  <link rel="stylesheet" type="text/css" href="__STATIC__/weixin/plug/dropload/dropload.css" /> 
+  <script src="__STATIC__/weixin/plug/dropload/dropload.min.js"></script> 
+  <script type="text/javascript">
+  function ajaxGetDate(infourl,url,param){
+	    $.ajax({
+	        type: 'POST',
+	        url: url,
+	        data:param,
+	        dataType: 'json',
+	        success: function (data) {
+	            var result = '';
+	            if (data.data.length > 0) {
+	            	//console.log(data.data);
+	                $.each(data.data, function (i, item) {
+	                	//me.resetload();
+	                    result += '<a href="' + infourl + '/id/' + item.trainer_id + '">';
+	                    result += '<li class="">';
+	                    result += '<div><span class="imgbg" style="background: url('+ item.avatar+') 50% 50% / cover no-repeat;"><img style="display:none" src="' + item.avatar + '" alt="" /></span><b>累计教学:' +item.total_time+ '小时</b></div>';
+	                    result += '<div><h4>' + item.trainer_name + '<b>' + item.teaching_type + '</b></h4>';
+	                    result += '<h5><span class="star_32x22"><s class="star' + item.star + '"></s></span>' + item.comment + '人评价</h5>';
+	                    result += '<dl>';
+	                    result += '<dt>服务区域：</dt>';
+	                    result += '<dd>';
+	                    $.each(item.service_json, function (k, val) {
+	                        result += '<s>' + k + '（' + val + '）</s>';
+	                    });
+	                    result += '</dd>';
+	                    result += '</dl>';
+	                    result += '<p>';
+	                    if (item.play_ids) {
+	                        result += '<i class="spec1">' + item.play_ids + '</i>';
+	                    }
+	                    if (item.level) {
+	                        result += '<i class="spec3">' + item.level + '</i>';
+	                    }
+	                    result += '</p>';
+	                    result += '</div>';
+	                    result += '<div>';
+	                    if(item.is_promotion){
+	                        result += '<p>¥' + item.price + '<s>/小时</s><span><b>¥' + item.original_price + '</b>/小时</span></p>'
+	                        result += '<p><span>限时折扣</span></p>';   
+	                    }else{
+	                        result += '<p>¥' + item.original_price + '<s>/小时</s></p>'
+	                    }
+	                    result += '</div>'
+	                    result += '</li>';
+	                    result += '</a>';
+	                });
+	                $('.coachList').html(result);
+	            } else {
+	            	$('.coachList').html('暂无数据');
+	            }
+	            
+	        },
+	       
+	    });
+  }
+$(function () {
+	//初始化
+	var url = "{:U('Trainer/index')}";
+    var mc_id = {$mc_id};
+    var infourl = "{:U('Trainer/detail')}";
+    var startpage = 0,numpage=5;
+    var param={};
+	param['mc_id'] = mc_id;
+	param['startpage'] = startpage;
+	param['numpage'] = numpage;
+	
+	ajaxGetDate(infourl,url,param);
+	//搜索提交
+	//区域
+	$('.area').click(function(){
+		//alert($(this).attr('value'));
+		var area = $(this).attr('value');
+		$('#myarea').text($(this).text());
+		param['area'] = area;
+		ajaxGetDate(infourl,url,param);
+	})
+	//打法
+	$('.play').click(function(){
+		//alert($(this).attr('value'));
+		var play = $(this).attr('value');
+		$('#myplay').text($(this).text());
+		param['play'] = play;
+		ajaxGetDate(infourl,url,param);
+	})
+	//性别
+	$('.sex').click(function(){
+		//alert($(this).attr('value'));
+		var sex = $(this).attr('value');
+		$('#mysex').text($(this).text());
+		param['sex'] = sex;
+		ajaxGetDate(infourl,url,param);
+	})
+	//时间
+	$('.mytime').click(function(){
+		//alert($(this).attr('value'));
+		var mytime = $(this).attr('value');
+		$('#mytime').text($(this).text());
+		param['mytime'] = mytime;
+		ajaxGetDate(infourl,url,param);
+	})
+	//价格
+	$('.myprice').click(function(){
+		//alert($(this).attr('value'));
+		var myprice = $(this).attr('value');
+		$('#myprice').text($(this).text());
+		param['myprice'] = myprice;
+		ajaxGetDate(infourl,url,param);
+	})
+	
+	
+	//下拉加载
+    setTimeout(function () {
+        $(".dropload-down").css('paddingBottom', 88 + 'px');
+    }, 1);
+    $('.chooseCoach').dropload({
+        scrollArea: window,
+        loadDownFn: function (me) {
+            if (url) {
+            	param['startpage'] = param['startpage']+5;
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data:param,
+                    dataType: 'json',
+                    success: function (data) {
+                        $("#pages").html(data.pages);
+                        var result = '';
+                        if (data.data.length > 0) {
+                        	//console.log(data.data);
+                            $.each(data.data, function (i, item) {
+                                result += '<a href="' + infourl + '?id=' + item.trainer_id + '">';
+                                result += '<li class="opacity">';
+                                result += '<div><span class="imgbg"><img src="' + item.avatar + '" alt="" /></span><b>累计教学:' +item.total_time+ '小时</b></div>';
+                                result += '<div><h4>' + item.trainer_name + '<b>' + item.teaching_type + '</b></h4>';
+                                result += '<h5><span class="star_32x22"><s class="star' + item.star + '"></s></span>' + item.comment + '人评价</h5>';
+                                result += '<dl>';
+                                result += '<dt>服务区域：</dt>';
+                                result += '<dd>';
+                                $.each(item.service_json, function (k, val) {
+                                    result += '<s>' + k + '（' + val + '）</s>';
+                                });
+                                result += '</dd>';
+                                result += '</dl>';
+                                result += '<p>';
+                                if (item.play_ids) {
+                                    result += '<i class="spec1">' + item.play_ids + '</i>';
+                                }
+                                if (item.level) {
+                                    result += '<i class="spec3">' + item.level + '</i>';
+                                }
+                                result += '</p>';
+                                result += '</div>';
+                                result += '<div>';
+                                if(item.is_promotion){
+                                    result += '<p>¥' + item.price + '<s>/小时</s><span><b>¥' + item.original_price + '</b>/小时</span></p>'
+                                    result += '<p><span>限时折扣</span></p>';   
+                                }else{
+                                    result += '<p>¥' + item.original_price + '<s>/小时</s></p>'
+                                }
+                                result += '</div>'
+                                result += '</li>';
+                                result += '</a>';
+                            });
+                        } else {
+                        	alert("没有数据了");
+                        	me.resetload();
+                            $(".dropload-refresh").html("没有数据了");
+                            // 锁定
+                           // me.lock();
+                            // 无数据
+                           // me.noData();
+                            return false;
+                        }
+                        // 为了测试，延迟1秒加载
+                        setTimeout(function () {
+                            $('.coachList').append(result);
+                            // 每次数据加载完，必须重置
+                            imgBg();
+                            me.resetload();
+                        }, 1000);
+                    },
+                    error: function (xhr, type) {
+                        // 即使加载出错，也得重置
+                        me.resetload();
+                        $(".dropload-refresh").html("没有数据了");
+                    }
+                });
+            } else {
+                me.resetload();
+                $(".dropload-refresh").html("没有数据了");
+            }
+        }
+    });
+});
+$(document).ready(function () {
+
+});
+
+    </script>  
+ </body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+ <head> 
+  <meta charset="utf-8" /> 
+  <title>基本信息设置</title> 
+  <meta name="apple-mobile-web-app-capable" content="yes" /> 
+  <meta name="apple-touch-fullscreen" content="yes" /> 
+  <meta name="full-screen" content="no" /> 
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" /> 
+  <meta name="format-detection" content="telephone=no" /> 
+  <meta name="format-detection" content="address=no" /> 
+  <script src="__STATIC__/weixin/js/viewport.js"></script> 
+  <link href="__STATIC__/weixin/css/common.css" rel="stylesheet" /> 
+  <script src="__STATIC__/weixin/js/jquery-1.10.2.min.js"></script> 
+  <script src="__STATIC__/weixin/js/common.js"></script> 
+ </head> 
+ <body class="bg1"> 
+  <div class="set"> 
+   <div class="title">
+    <img src="__STATIC__/weixin/img/txt-set.png" /> 
+    <a href="javascript:history.go(-1);" class="back"></a> 
+   </div> 
+    <input name="_token" type="hidden" value="IZLVAEpQOX6AEhY222E8gW4zEGn86wMemmaEUF5v" /> 
+    <div class="form"> 
+     <ul> 
+      <li> <img src="__STATIC__/weixin/img/page17/ico1.png" alt="" />账户 &nbsp;&nbsp;| <input type="text" name="phone" value="{$user.mobile}" disabled="true" /> </li> 
+      <li> <img src="__STATIC__/weixin/img/page17/ico2.png" alt="" />姓名 &nbsp;&nbsp;| <input type="text" name="name" value="{$user.user_nickname}" /> </li> 
+      <li> <img src="__STATIC__/weixin/img/page17/ico3.png" alt="" />性别 &nbsp;&nbsp;| 
+      <label for="nan">男 <input type="radio" name="sex" id="nan" value="1" <eq name="user.sex" value="1">checked</eq> /> </label> 
+      <label for="nv">女 <input type="radio" name="sex" id="nv" value="2" <eq name="user.sex" value="2">checked</eq> /> </label> </li> 
+     </ul> 
+    </div> 
+    <button class="btn03">提交</button> 
+  </div>  
+  <script type="text/javascript">
+$(".btn03").click(function () {
+    var phone = $('input[name="phone"]').val();
+    var username = $('input[name="name"]').val();
+    var sex = $('input[name="sex"]:checked').val();
+    if (phone == '') {
+        alert('手机号不能为空');
+        return false;
+    } else if (!/^((13[0-9])|147|(15[0-35-9])|(17[0-35-9])|180|181|182|183|184|(18[5-9]))[0-9]{8}$/.test(phone)) {
+        alert('手机号码不正确');
+        return false;
+    } else if (username == '') {
+        alert('姓名不能为空');
+        return false;
+    }
+    $.post("{:U('User/set')}",{phone:phone,username:username,sex:sex},function(data){
+    	if(data.status){
+    		location.reload();
+    	}else{
+    		alert(data.msg);
+    	}
+    },'json')
+});
+</script> 
+ </body>
+</html>

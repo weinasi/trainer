@@ -1,0 +1,12 @@
+1、导入trainer.sql数据库文件，修改Apps/Common/Conf/config.php 里数据库信息
+2、管理后台地址：域名/index.php/Admin  账号密码:admin  123456
+3、其它功能入库地址：活动入口：域名/index.php/Activity,详细情况Apps/Weixin/Controller/WeixinController.class.php微信处理程序菜单设置
+4、数据库正式地址 数据库名 trainer；测试数据库 trainertest
+5、由于mac或者>5.3的php版本不支持mysql了，会出现：_NOT_SUPPERT_:mysql 这个错误
+6、出现相关配置错误，可能是缓存的问题，删除缓存文件：Apps/static/data/.runtime文件
+7、以下文件不会git更新，需要单独配置
+    1）Apps/index.php
+    2）Apps/static/data
+    3）Apps/Common/Conf/config.php
+    4）Apps/Log
+    4）Wxpay/logs

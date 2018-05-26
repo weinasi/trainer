@@ -1,0 +1,31 @@
+<extend name="Public/main" />
+<block name="body">
+	<div class="wrap">
+		<div id="home_toptip"></div>
+		<if condition="count($sms) gt 0">
+			<h2 class="h_a">系统通知</h2>
+			<div class="home_info">
+				<ul>
+					<foreach  name="sms" item="vo">
+						<li> <em>{$vo.title}</em> <span>{$vo.content}</span> </li>
+					</foreach>
+				</ul>
+			</div>
+		</if>
+		<h2 class="h_a">系统信息</h2>
+		<div class="home_info">
+			<ul>
+				<volist name="server_info" id="vo">
+					<li> <em>{$key}</em> <span>{$vo}</span> </li>
+				</volist>
+			</ul>
+		</div>
+		<h2 class="h_a">发起团队</h2>
+		<div class="home_info" id="home_devteam">
+			<ul>
+				<li> <em>意象团队</em> <span>www.yixiangit.com</span> </li>
+				<li> <em>联系邮箱</em> <span>guchengwuyue@163.com</span> </li>
+			</ul>
+		</div>
+	</div>
+</block>

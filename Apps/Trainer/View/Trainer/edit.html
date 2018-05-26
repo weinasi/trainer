@@ -1,0 +1,320 @@
+<extend name="Public/main" />
+
+<block name="style">
+	<script type="text/javascript">
+		var catid = "12";
+	</script>
+	<style type="text/css">
+		.col-auto {
+			overflow: hidden;
+			_zoom: 1;
+			_float: left;
+			border: 1px solid #c2d1d8;
+		}
+		.col-right {
+			float: right;
+			width: 210px;
+			overflow: hidden;
+			margin-left: 6px;
+			border: 1px solid #c2d1d8;
+		}
+
+		body fieldset {
+			border: 1px solid #D8D8D8;
+			padding: 10px;
+			background-color: #FFF;
+		}
+		body fieldset legend {
+			background-color: #F9F9F9;
+			border: 1px solid #D8D8D8;
+			font-weight: 700;
+			padding: 3px 8px;
+		}
+		.list-dot{ padding-bottom:10px}
+		.list-dot li,.list-dot-othors li{padding:5px 0; border-bottom:1px dotted #c6dde0; font-family:"宋体"; color:#bbb; position:relative;_height:22px}
+		.list-dot li span,.list-dot-othors li span{color:#004499}
+		.list-dot li a.close span,.list-dot-othors li a.close span{display:none}
+		.list-dot li a.close,.list-dot-othors li a.close{ background: url("__STATIC__/images/cross.png") no-repeat left 3px; display:block; width:16px; height:16px;position: absolute;outline:none;right:5px; bottom:5px}
+		.list-dot li a.close:hover,.list-dot-othors li a.close:hover{background-position: left -46px}
+		.list-dot-othors li{float:left;width:24%;overflow:hidden;}
+	</style>
+</block>
+
+<block name="body">
+	<div class="wrap J_check_wrap">
+		
+		<form name="myform" id="myform" action="{:U('Trainer/edit')}" method="post" class="J_ajaxForm" enctype="multipart/form-data">
+			<div class="col-right">
+				<div class="table_full">
+					<table width="100%">
+						<tr>
+							<td><b>头像</b><span class="must_red">800*800像素</span></td>
+						</tr>
+						<tr>
+							<td>
+								<div  style="text-align: center;"><input type='hidden' name='info[avatar]' id='thumb' value='{$info.avatar}'>
+									<a href='javascript:void(0);' onclick="flashupload('thumb_images', '附件上传', 'thumb', thumb_images, '1,jpg|jpeg|gif|png|bmp,1,,,1', 'content', '12', 'b6ba209759e147124653ac77362ef2bd');
+											return false;">
+										<img src="{$info.avatar|default='__ROOT__/statics/images/icon/upload-pic.png'}" id='thumb_preview' width='135' height='113' style='cursor:hand' /></a>
+									<input type="button"  class="btn" onclick="$('#thumb_preview').attr('src', '__STATIC__/images/icon/upload-pic.png');
+											$('#thumb').val('');
+											return false;" value="取消图片">
+									<script type="text/javascript">
+										function crop_cut_thumb(id) {
+											if (id == '' || id == undefined) {
+												isalert('请先上传缩略图！');
+												return false;
+											}
+											var catid = $('input[name="info[catid]"]').val();
+											if (catid == '') {
+												isalert('请选择栏目ID！');
+												return false;
+											}
+											Wind.use('artDialog', 'iframeTools', function() {
+												art.dialog.open(GV.DIMAUB + 'index.php?a=public_imagescrop&m=Content&g=Contents&catid=' + catid + '&picurl=' + encodeURIComponent(id) + '&input=thumb&preview=thumb_preview', {
+													title: '裁减图片',
+													id: 'crop',
+													ok: function() {
+														var iframe = this.iframe.contentWindow;
+														if (!iframe.document.body) {
+															alert('iframe还没加载完毕呢');
+															return false;
+														}
+														iframe.uploadfile();
+														return false;
+													},
+													cancel: true
+												});
+											});
+										}
+										;
+									</script></div>
+							</td>
+						</tr>
+
+					</table>
+				</div>
+			</div>
+			<div class="col-auto">
+				<div class="h_a">教练内容</div>
+				<div class="table_full">
+					<table width="100%">
+						<tr>
+							<th width="80">教练姓名</th>
+							<td>
+								<input type="text" style="width:400px;" name="info[trainer_name]" id="title" value="{$info.trainer_name}" style="color:" class="input input_hd J_title_color" placeholder="请输入教练名称"  />
+								<span class="must_red">*</span>
+							</td>
+						</tr>
+						<tr>
+							<th width="80">所属城市</th>
+							<td><select name="info[mc_id]" id="mycity">
+									<volist name="city" id="vo">
+									 <option value="{$vo.mc_id}" <eq name="vo.mc_id" value="$info.mc_id">selected</eq>>{$vo.city_name}</option>
+									</volist>
+								</select>
+								<span class="must_red">*</span>
+							</td>
+							
+						</tr>
+						<tr>
+							<th width="80">服务区域与时间</th>
+							<td id="service_area">
+								
+							   <foreach name="service_json" item="vo" key="k">
+							     <label>
+								  <input type="checkbox" class="area_id" checked value="{$k}">
+								  <span>{$k}</span>
+								  <select class="service_time_type">
+									<option value="周一至日" <eq name="vo" value="周一至日">selected</eq>>周一至日</option>
+									<option value="周一至五" <eq name="vo" value="周一至五">selected</eq>>周一至五</option>
+									<option value="周六、日" <eq name="vo" value="周六、日">selected</eq>>周六、日</option>
+							 	 </select>
+								</label>
+							   </foreach>
+							</td>
+							<input type="hidden" name="info[service_json]" value='{$info.service_json}' />
+							   <script type="text/javascript">
+								 $(function(){
+									 //ajax 获取区域
+									 
+										 $("#mycity").change(function(){
+											 $("input[name='info[service_json]']").val('');
+											 var id = $(this).val();
+											 $.ajax({
+												   type: "POST",
+												   url: "{:U('Trainer/getArea')}",
+												   data: {id:id},
+												   dataType:'json',
+												   success: function(data){
+													   if(data.status){
+														   var html ='';
+														   for(var i=0;i<data.data.length;i++){
+															   html +='<label>';
+														       html +='<input type="checkbox" class="area_id" value="'+data.data[i]["area_name"]+'">';
+															   html +='<span>'+data.data[i]["area_name"]+'</span>';
+															   html +='<select class="service_time_type">';
+															   html +='<option value="周一至日">周一至日</option>';
+															   html +='<option value="周一至五">周一至五</option>';
+															   html +='<option value="周六、日">周六、日</option>';
+															   html +='</select></label>'; 
+														   }
+														   $('#service_area').html(html);
+													   }else{
+														   isalert(data.info);
+													   }
+												     
+												   }
+											 });
+										 })
+									
+									 
+									 $('.area_id').live('click',function(){
+										 var jsonstr='';
+										 $('.area_id:checked').each(function(){
+											 var area_id = $(this).val();
+											 var service_time_type = $(this).next().next().val();
+											 
+											 jsonstr += '"'+area_id+'":"'+service_time_type+'",';
+											 
+										 }) 
+										 //console.log(jsonstr);
+										 if(jsonstr){
+											 jsonstr=jsonstr.substr(0,jsonstr.length-1);
+											 jsonstr = '{'+jsonstr+'}';
+										 }
+										// $("input[name='info[service_json]']").val(' ');
+										 $("input[name='info[service_json]']").val(jsonstr);
+										 //alert(jsonstr);
+									 })
+									 
+									 $('.service_time_type').live('change',function(){
+										 var jsonstr='';
+										 $('.area_id:checked').each(function(){
+											 var area_id = $(this).val();
+											 var service_time_type = $(this).next().next().val();
+											 
+											 jsonstr += '"'+area_id+'":"'+service_time_type+'",';
+											 
+										 }) 
+										// console.log(jsonstr);
+										 if(jsonstr){
+											 jsonstr=jsonstr.substr(0,jsonstr.length-1);
+											 jsonstr = '{'+jsonstr+'}';
+										 }
+										 
+										 $("input[name='info[service_json]']").val(jsonstr);
+										 //alert(jsonstr);
+									 })
+									
+								 })	
+							  </script>
+						</tr>
+						<tr>
+							<th width="80">打法</th>
+							<td>
+							  <volist name="play" id="vo">
+							   
+								<label><input type="checkbox" name="play[]" <in name="vo.play_id" value="$info.play_ids">checked</in> value="{$vo.play_id}"><span>{$vo.play_name}</span></label>
+							  </volist>
+								
+							</td>
+						</tr>
+						
+						<tr>
+							<th width="80">累计教学时间</th>
+							<td>
+								<input type="text" style="width:100px;" name="info[total_time]" id="title" value="{$info.total_time}" style="color:" class="input input_hd J_title_color"  />
+								<span class="must_red">单位小时</span>
+							</td>
+						</tr>
+						<tr>
+							<th width="80">手机号</th>
+							<td>
+								<input type="text" style="width:400px;" name="info[phone]" id="title" value="{$info.phone}" style="color:" class="input input_hd J_title_color" placeholder="请输入手机号" />
+								<span class="must_red">*</span>
+							</td>
+						</tr>
+					
+						<tr>
+							<th width="80">教学类型</th>
+							<td><select name="info[teaching_type]">
+									<option value="1" <eq name="info.teaching_type" value="1">selected</eq>>陪练</option>
+									<option value="2" <eq name="info.teaching_type" value="2">selected</eq>>比赛指导</option>
+									<option value="3" <eq name="info.teaching_type" value="3">selected</eq>>两者皆有</option>
+								</select>
+								<span class="must_red">*</span>
+							</td>
+						</tr>
+						<tr>
+							<th width="80">教练级别</th>
+							<td><select name="info[level]">
+									<option value="1" <eq name="info.level" value="1">selected</eq>>国家一级运动员</option>
+									<option value="2" <eq name="info.level" value="2">selected</eq>>国家二级运动员</option>
+									<option value="3" <eq name="info.level" value="3">selected</eq>>国家三级运动员</option>
+									<option value="4" <eq name="info.level" value="4">selected</eq>>普通</option>
+								</select>
+								<span class="must_red">*</span>
+							</td>
+						</tr>
+						<tr>
+						    <th width="80">性别</th>
+							<td>
+								<span class="switch_list cc">
+									<label><input type="radio" name="info[sex]" value="1" <eq name="info.sex" value="1">checked</eq> ><span>男</span></label>
+									<label><input type="radio" name="info[sex]" value="2" <eq name="info.sex" value="2">checked</eq> ><span>女</span></label>
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<th width="80">原价</th>
+							<td>
+								<input type="text" style="width:200px;" name="info[original_price]" id="title" value="{$info.original_price}" style="color:" class="input input_hd J_title_color" placeholder="请输入原价"  />
+								<span class="must_red">*</span>
+							</td>
+						</tr>
+						<tr>
+							<th width="80">促销价格</th>
+							<td>
+								<input type="text" style="width:200px;" name="info[price]" id="title" value="{$info.price}" style="color:" class="input input_hd J_title_color" placeholder="请输入促销价"  />
+								<span class="must_red">设置了促销才显示此价格</span>
+							</td>
+						</tr>
+						<tr>
+						    <th width="80">是否促销</th>
+							<td>
+								<span class="switch_list cc">
+									<label><input type="radio" name="info[is_promotion]" value="1" <eq name="info.sex" value="1">checked</eq>><span>是</span></label>
+									<label><input type="radio" name="info[is_promotion]" value="0" <eq name="info.sex" value="0">checked</eq> ><span>否</span></label>
+								
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<th width="80">简介</th>
+							<td>
+								<textarea name='info[introduction]' id='description' style='width:60%;height:200px;'  >{$info.introduction}</textarea>
+								<span class="must_red">每一句内容以|分隔，例如：xxx|xxx</span>
+							</td>
+						</tr>
+						
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="btn_wrap" style="z-index:999;text-align: center;">
+				<div class="btn_wrap_pd">
+					<input type="hidden" name="id" value="{$info.trainer_id}" />
+					<button class="btn btn_submit J_ajax_submit_btn"type="submit">提交</button>
+					<!-- <button class="btn J_ajax_close_btn"type="submit">关闭</button> -->
+				</div>
+			</div>
+		</form>
+	</div>
+</block>
+<block name="script">
+	<script type="text/javascript" src="__STATIC__/js/content_addtop.js{$js_debug}"></script>
+	<script type="text/javascript">
+									
+	</script>
+</block>

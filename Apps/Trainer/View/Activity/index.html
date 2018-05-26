@@ -1,0 +1,71 @@
+<extend name="Public/main" />
+<block name="body">
+	<div class="wrap jj">
+		<div class="nav">
+			<ul class="cc">
+				<li class="current"><a href="{:U('index')}">活动列表</a></li>
+				<li ><a href="{:U('add')}" >添加活动</a></li>
+			</ul>
+		</div>
+		<div class="common-form">
+			<form method="post" class="J_ajaxForm" action="#">
+				<div class="table_list">
+					<table width="100%">
+						<thead>
+							<tr>
+								<td align='center'>ID</td>
+								<td align='center'>活动标题</td>
+								<td align='center'>活动类型</td>
+								<td align='center'>报名人数</td>
+								<td align='center'>价格(元/人)</td>
+								<td align='center'>地点</td>
+								<td align='center'>开始时间</td>
+								<td align='center'>结束时间</td>
+								<td align='center'>添加时间</td>
+								<td align='center'>操作</td>
+							</tr>
+						</thead>
+						<tbody>
+						<foreach name="data" item="vo">
+							<tr>
+								<td align='center'>{$vo.activity_id}</td>
+								<td align='center'>{$vo.activity_name}</td>
+							    <td align='center'>
+							      <eq name="vo.type" value="1">新客户</eq>
+							      <eq name="vo.type" value="2">老客户</eq>
+							    </td>
+							    <td align='center'>
+							      {$vo.num}
+							    </td>
+							    <td align='center'>
+							      {$vo.price}
+							    </td>
+							    <td align='center'>
+							      {$vo.place}
+							    </td>
+							    <td align='center'>
+							      {$vo.start_time|date='Y-m-d H:i:s',###}
+							    </td>
+							    <td align='center'>
+							      {$vo.end_time|date='Y-m-d H:i:s',###}
+							    </td>
+							    <td align='center'>{$vo.create_time|date='Y-m-d H:i:s',###}</td>
+							<td align='center'>
+								<a href="{:U('edit',array('id'=>$vo[activity_id]))}" >修改</a>|
+								<a href="{:U('delete',array('id'=>$vo[activity_id]))}" class="J_ajax_del" >删除</a>
+							</td>
+							</tr>
+						</foreach>
+						</tbody>
+					</table>
+					<div class="p10"><div class="pages"> {$page} </div> </div>
+					<!--     <div class="btn_wrap"> -->
+					<!--       <div class="btn_wrap_pd"> -->
+					<!--         <button class="btn btn_submit mr10 J_ajax_submit_btn" type="submit">排序</button> -->
+					<!--       </div> -->
+					<!--     </div> -->
+				</div>
+			</form>
+		</div>
+	</div>
+</block>

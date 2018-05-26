@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+ <head> 
+  <meta charset="utf-8" /> 
+  <title>活动详情</title> 
+  <meta name="apple-mobile-web-app-capable" content="yes" /> 
+  <meta name="apple-touch-fullscreen" content="yes" /> 
+  <meta name="full-screen" content="no" /> 
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" /> 
+  <meta name="format-detection" content="telephone=no" /> 
+  <meta name="format-detection" content="address=no" /> 
+  <script src="__STATIC__/weixin/js/viewport.js"></script> 
+  <link href="__STATIC__/weixin/css/common.css" rel="stylesheet" /> 
+  <script src="__STATIC__/weixin/js/jquery-1.10.2.min.js"></script> 
+  <script src="__STATIC__/weixin/js/common.js"></script> 
+ </head> 
+ <body class=""> 
+  <div class="course_xiangqing"> 
+   <div class="title">
+    <img src="__STATIC__/weixin/img/txt-xkpx.png" />
+   </div> 
+   <a href="javascript:history.go(-1);" class="back"></a> 
+   <div class="imgbg">
+    <img src="{$info.imgurl}" /> 
+    <p>{$info.activity_name}（<eq name="info.type" value="1">新客户<else />老客户</eq>）<span> 已报名 0 / {$info.num}</span></p> 
+   </div> 
+   <div class="xkpx"> 
+    <i></i> 
+    <ul> 
+     <li>{$info.activity_name}（<eq name="info.type" value="1">新客户<else />老客户</eq>）</li> 
+     <li>时间：{$info.start_time|date='y/m/d H:s',###} - {$info.end_time|date='y/m/d H:s',###}</li> 
+     <li>{$info.place}</li> 
+     <li>每人￥{$info.price}</li> 
+    </ul> 
+   </div> 
+   <h3>特殊说明</h3> 
+   <div class="xkpx"> 
+    <i></i> 
+    <ul> 
+    <volist name="info.spec" id="vv">
+      <li>{$vv}</li> 
+     </volist>
+    </ul> 
+   </div> 
+   <span href="javascript:void(0)" class="btn03">马上报名</span> 
+  </div>  
+ </body>
+ <script>
+ $(".btn03").click(function () {
+	      var id = '{$info.activity_id}'
+          $.post("{:U('Index/order')}", {id:id},function (data) {
+	              if (data.status == 0) {
+	                  alert(data.msg);
+	              } else if (data.status == 1) {
+	                 location.href=data.url;
+	              }
+	          },"json"); 
+ });
+ </script>
+</html>

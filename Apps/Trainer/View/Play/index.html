@@ -1,0 +1,46 @@
+<extend name="Public/main" />
+<block name="body">
+	<div class="wrap jj">
+		<div class="nav">
+			<ul class="cc">
+				<li class="current"><a href="{:U('Play/index')}">打法列表</a></li>
+				<li ><a href="{:U('Play/add')}" >添加打法</a></li>
+			</ul>
+		</div>
+		<div class="common-form">
+			<form method="post" class="J_ajaxForm" action="#">
+				<div class="table_list">
+					<table width="100%">
+						<thead>
+							<tr>
+								<td align='center'>ID</td>
+								<td align='center'>打法名称</td>
+								<td align='center'>创建时间</td>
+								<td align='center'>操作</td>
+							</tr>
+						</thead>
+						<tbody>
+						<foreach name="data" item="vo">
+							<tr>
+								<td align='center'>{$vo.play_id}</td>
+								<td align='center'>{$vo.play_name}</td>
+								<td align='center'>{$vo.create_time|date='Y-m-d H:i:s',###}</td>
+								<td align='center'>
+									<a href="{:U('edit',array('id'=>$vo[play_id]))}" >修改</a>|
+									<a href="{:U('delete',array('id'=>$vo[play_id]))}" class="J_ajax_del" >删除</a>
+								</td>
+							</tr>
+						</foreach>
+						</tbody>
+					</table>
+					<div class="p10"><div class="pages"> {$page} </div> </div>
+					<!--     <div class="btn_wrap"> -->
+					<!--       <div class="btn_wrap_pd"> -->
+					<!--         <button class="btn btn_submit mr10 J_ajax_submit_btn" type="submit">排序</button> -->
+					<!--       </div> -->
+					<!--     </div> -->
+				</div>
+			</form>
+		</div>
+	</div>
+</block>

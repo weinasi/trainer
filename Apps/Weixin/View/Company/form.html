@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+ <head> 
+  <meta charset="utf-8" /> 
+  <title>企业服务</title> 
+  <meta name="apple-mobile-web-app-capable" content="yes" /> 
+  <meta name="apple-touch-fullscreen" content="yes" /> 
+  <meta name="full-screen" content="no" /> 
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" /> 
+  <meta name="format-detection" content="telephone=no" /> 
+  <meta name="format-detection" content="address=no" /> 
+  <script src="__STATIC__/weixin/js/viewport.js"></script> 
+  <link href="__STATIC__/weixin/css/common.css" rel="stylesheet" /> 
+  <script src="__STATIC__/weixin/js/jquery-1.10.2.min.js"></script> 
+  <script src="__STATIC__/weixin/js/common.js"></script> 
+ </head> 
+ <body> 
+  <div class="wrap_qyfw"> 
+   <div class="coachTop"> 
+    <h3><img src="__STATIC__/weixin/img/txt-qyfw.png" /></h3> 
+    <p class="logo"><img src="__STATIC__/weixin/img/logo.png" /></p> 
+    <h3><img src="__STATIC__/weixin/img/txt-qyfw.png" /></h3> 
+    <a href="javascript:history.go(-1);" class="back"></a> 
+   </div> 
+    <input name="_token" type="hidden" value="IZLVAEpQOX6AEhY222E8gW4zEGn86wMemmaEUF5v" /> 
+    <input type="hidden" class="type" name="type" value="" /> 
+    <div class="form"> 
+     <ul> 
+      <li> <label>公司名称</label> <input type="text" name="company" class="ipt2" onblur="if (placeholder ==''){placeholder='请输入公司名称'}" onfocus="if (placeholder =='请输入公司名称'){placeholder =''}" placeholder="请输入公司名称" /> </li> 
+      <li> <label>所属城市</label> <input type="text" name="city" class="ipt2" onblur="if (placeholder ==''){placeholder='请输入所属城市'}" onfocus="if (placeholder =='请输入所属城市'){placeholder =''}" placeholder="请输入所属城市" /> </li> 
+      <li> <label>公司地址</label> <input type="text" name="address" class="ipt2" onblur="if (placeholder ==''){placeholder='请输入公司地址'}" onfocus="if (placeholder =='请输入公司地址'){placeholder =''}" placeholder="请输入公司地址" /> </li> 
+      <li> <label>联系人</label> <input type="text" name="name" class="ipt2" onblur="if (placeholder ==''){placeholder='请输入联系人姓名'}" onfocus="if (placeholder =='请输入联系人姓名'){placeholder =''}" placeholder="请输入联系人姓名" /> </li> 
+      <li> <label>联系电话</label> <input type="text" name="phone" class="ipt2" onblur="if (placeholder ==''){placeholder='请输入联系人电话'}" onfocus="if (placeholder =='请输入联系人电话'){placeholder =''}" placeholder="请输入联系人电话" /> </li> 
+      <li> <label>服务类型 </label> <i>陪练</i> <i>比赛指导</i> <i class="active">两者皆要</i> <input id="type" type="hidden" value="1" /> </li> 
+      <li> <label>备注</label> <textarea cols="50" id="remarks" rows="3" onblur="if (placeholder ==''){placeholder='请填写服务人数及服务日期'}" onfocus="if (placeholder =='请填写服务人数及服务日期'){placeholder =''}" placeholder="请填写服务人数及服务日期" class="area1"></textarea> </li> 
+     </ul> 
+     <p>提交成功后，客服人员将与您取得联系。</p> 
+    </div> 
+    <button class="btn03" value="">确认</button> 
+  </div>  
+  <script type="text/javascript">
+        $(".btn03").click(function(){
+            var company = $('input[name="company"]').val();
+            var phone = $('input[name="phone"]').val();
+            var city = $('input[name="city"]').val();
+            var address = $('input[name="address"]').val();
+            var username = $('input[name="name"]').val();
+            var remarks = $("#remarks").val();
+           
+            var type = $('#type').val();
+            $('.type').attr('value',type);
+            if(username == ''){
+                alert('请输入姓名');
+                return false;
+            }else if(phone == ''){
+                alert('手机号不能为空');
+                return false;
+            }else if (!/^((13[0-9])|147|(15[0-35-9])|(17[0-35-9])|180|181|182|183|184|(18[5-9]))[0-9]{8}$/.test(phone)){
+                alert('手机号码不正确');
+                return false;
+            }else if(type == ''){
+                alert('服务类型不能为空');
+                return false;
+            }else if(company == ''){
+                alert('公司名称不能为空');
+                return false;
+            }else if(city == ''){
+                alert('城市不能为空');
+                return false;
+            }else if(address == ''){
+                alert('地址不能为空');
+                return false;
+            }
+            $.post("{:U('Company/form')}",{username:username,phone:phone,type:type,company:company,city:city,address:address,remark:remarks},function(data){
+            	if(data.status){
+            		alert(data.msg);
+            	}else{
+            		alert(data.msg);
+            	}
+            },'json')
+        });
+    </script> 
+ </body>
+</html>

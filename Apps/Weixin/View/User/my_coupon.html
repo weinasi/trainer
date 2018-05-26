@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>吾动</title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name='apple-touch-fullscreen' content='yes'>
+        <meta name="full-screen" content="no">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="format-detection" content="address=no" />
+        <script src="http://www.wudongwang.com/statics/weixin/js/viewport.js"></script>
+        <link href="http://www.wudongwang.com/statics/weixin/css/common.css" rel="stylesheet" />
+        <script src="http://www.wudongwang.com/statics/weixin/plug/jquery/jquery-1.10.2.min.js"></script>
+        <script src="http://www.wudongwang.com/statics/weixin/js/common.js"></script>
+    </head>
+        <body>
+    <div class="ticketWrap">
+        <div class="title"><img src="http://www.wudongwang.com/statics/weixin/img/page26/txt-wdyhj.png"/>
+            <a href="javascript:history.go(-1);" class="back"></a>
+        </div>
+        <div class="ticketCon">
+            <ul>
+             <volist name="coupon" id="vo">
+                <li>
+                   <a href="{:U('Trainer/index')}">
+                       <b>￥</b><i>{$vo.price}</i>
+                       <div>
+                           <h3>{$vo.coupon_name}</h3>
+                            <br/> 
+                            <eq name="vo.type" value="0">长期有效
+                            <else />
+                            	截止日期:{$vo.end_time|date='Y-m-d H:i',###}
+                            </eq>
+                       </div>
+                   </a>
+               </li>
+               </volist>
+            </ul>
+        </div>
+    </div>
+    </body>
+    
+</html>

@@ -1,0 +1,72 @@
+<extend name="Public/main" />
+<block name="body">
+	<div class="wrap jj">
+		<div class="nav">
+			<ul class="cc">
+				<li class="current"><a href="{:U('index')}">列表</a></li>
+			</ul>
+		</div>
+		<div class="common-form">
+			<form method="post" class="J_ajaxForm" action="#">
+				<div class="table_list">
+					<table width="100%">
+						<thead>
+							<tr>
+								<td align='center'>ID</td>
+								<td align='center'>公司名称</td>
+								<td align='center'>联系人</td>
+								<td align='center'>联系电话</td>
+								<td align='center'>地址</td>
+								<td align='center'>服务类型</td>
+								<td align='center'>备注</td>
+								<td align='center'>提交时间</td>
+								<td align='center'>操作</td>
+							</tr>
+						</thead>
+						<tbody>
+						<foreach name="data" item="vo">
+							<tr>
+								<td align='center'>{$vo.company_id}</td>
+								<td align='center'>{$vo.name}</td>
+							    <td align='center'>{$vo.contacts}</td>
+							    <td align='center'>{$vo.phone}</td>
+								<td align='center'>{$vo.city} {$vo.address}</td>
+							    <td align='center'>
+							      <eq name="vo.type" value="1">
+							    	  陪练
+							      </eq>
+							      <eq name="vo.type" value="2">
+							    	 比赛指导
+							      </eq>
+							      <eq name="vo.type" value="3">
+							    	 两者皆有
+							      </eq>
+							    </td>
+							    <td align='center'>
+							     <empty name="vo.remark">
+							      	 暂无
+							     <else />
+							     {$vo.remark}
+							     </empty>
+							    </td>
+							    <td align='center'>
+							         {$vo.create_time|date='Y-m-d H:i:s',###}
+							    </td>
+							<td align='center'>
+								<a href="{:U('delete',array('id'=>$vo[company_id]))}" class="J_ajax_del" >删除</a>
+							</td>
+							</tr>
+						</foreach>
+						</tbody>
+					</table>
+					<div class="p10"><div class="pages"> {$page} </div> </div>
+					<!--     <div class="btn_wrap"> -->
+					<!--       <div class="btn_wrap_pd"> -->
+					<!--         <button class="btn btn_submit mr10 J_ajax_submit_btn" type="submit">排序</button> -->
+					<!--       </div> -->
+					<!--     </div> -->
+				</div>
+			</form>
+		</div>
+	</div>
+</block>

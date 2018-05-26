@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+ <head> 
+  <meta charset="utf-8" /> 
+  <title>我的订单</title> 
+  <meta name="apple-mobile-web-app-capable" content="yes" /> 
+  <meta name="apple-touch-fullscreen" content="yes" /> 
+  <meta name="full-screen" content="no" /> 
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" /> 
+  <meta name="format-detection" content="telephone=no" /> 
+  <meta name="format-detection" content="address=no" /> 
+  <script src="__STATIC__/weixin/js/viewport.js"></script> 
+  <link href="__STATIC__/weixin/css/common.css" rel="stylesheet" /> 
+  <script src="__STATIC__/weixin/js/jquery-1.10.2.min.js"></script> 
+  <script src="__STATIC__/weixin/js/common.js"></script> 
+  <style>
+	.btn-del {
+	  height: 49px;
+	  line-height: 49px;
+	  background-color: #c00812;
+	  display: inline-block;
+	  border-radius: 5px;
+	  padding: 0 20px;
+	  text-align: center;
+	  color: #fff;
+	  font-size: 26px;
+	  border: none;
+	  background: #fff;
+	  color: #c00812;
+	  border: 1px solid #c00812;
+	}
+	</style>
+ </head> 
+ <body> 
+  <div class="order"> 
+   <div class="title">
+    <img src="__STATIC__/weixin/img/txt-dd.png" />
+   </div> 
+   <div class="tabTit"> 
+    <ul class="cf"> 
+     <li <eq name="orderstatus" value="">class="hover"</eq>><a href="{:U('Index/index')}">待服务</a>
+      <s></s></li> 
+     <li <eq name="orderstatus" value="2">class="hover"</eq>><a href="{:U('Index/index',array('status'=>2))}">服务中</a>
+      <s></s></li> 
+     <li <eq name="orderstatus" value="3">class="hover"</eq>><a href="{:U('Index/index',array('status'=>3))}">已完成</a>
+      <s></s></li> 
+     <li <eq name="orderstatus" value="-1">class="hover"</eq>><a href="{:U('Index/index',array('status'=>-1))}">已取消</a>
+      <s></s></li> 
+    </ul> 
+   </div> 
+   <div class="tabCon"> 
+    <empty name="order">
+      <div class="noOrder" style="height: 995px;">
+          <img src="__STATIC__/weixin/img/ico-order.png">
+          <p>没有找到相关订单</p>
+       </div>
+    <else />
+    <ul> 
+    <volist name="order" id="vo">
+     <li> <h3>{$vo.add_time|date='Y-m-d H:i',###} 
+           <eq name="vo.status" value="0">
+	        <span data-ymds="{$vo.left_time|date='Y/m/d H:i:s',###}">剩余支付时间：
+	        <s class="minute" order_id="{$vo.order_id}">
+	         00
+	        </s>分
+	        <s class="second">
+	         00
+	        </s>秒</span> 
+	        </eq>
+	        <eq name="vo.status" value="1"><span>已支付</span></eq>
+	        <eq name="vo.status" value="2"><span>服务中</span></eq>
+	        <eq name="vo.status" value="3"><span>已完成</span></eq>
+	        <eq name="vo.status" value="-1"><span>已取消</span></eq>
+        </h3> <a href="{:U('Index/orderDetail',array('id'=>$vo[order_id]))}"> 
+       <div class="bg"> 
+        <div class="l"> 
+         <span> <img src="{$vo.avatar}" /> </span> 
+        </div> 
+        <div class="c"> 
+         <h4>{$vo.trainer_name} <b>{$vo.teaching_type}</b></h4> 
+         <h5><span class="star_32x22">
+           <s class="star{$vo.star}"></s></span></h5> 
+         <volist name="vo[time_text]" id="vv">
+         	<p class="time">{$vv}</p> 
+         </volist>
+        </div> 
+       </div> </a> 
+      <div class="price">
+       合计金额:
+       <b>￥{$vo.total_fee}元</b>
+      </div> 
+      <div class="btnGroup"> 
+	      <eq name="vo.status" value="0">
+	       <a orderid="{$vo[order_id]}" href="javascript:void(0)" class="btn-cancel">取消订单</a> 
+	       <a href="{:U('Pay/index',array('id'=>$vo[order_id]))}" class="btn-pay">　支付　</a> 
+	       </eq>
+	       <eq name="vo.status" value="1">
+	       <a orderid="{$vo[order_id]}" href="javascript:void(0)" class="btn-cancel ">接单</a> 
+	       <a href="#" class="btn-pay">　已支付　</a> 
+	       </eq>
+	       <eq name="vo.status" value="2">
+	       <a href="javascript:void(0)" orderid="{$vo[order_id]}" class="btn-pay">服务中</a> 
+	       </eq>
+	       <eq name="vo.status" value="3">
+	       <a href="#" class="btn-pay">　已完成　</a> 
+	       </eq>
+	       <eq name="vo.status" value="-1">
+	        <a orderid="{$vo[order_id]}" href="javascript:void(0)" class="btn-del">删除订单</a> 
+	       <a href="{:U('Pay/index',array('id'=>$vo[order_id]))}" class="btn-pay">　已取消　</a> 
+	       </eq>
+      </div> 
+      <div class="blank"></div> </li> 
+      </volist>
+    </ul> 
+    </empty>
+   </div> 
+
+  </div> 
+  <div id="pages" style="display:none"> 
+  </div> 
+ <notempty name="order">
+  <link rel="stylesheet" type="text/css" href="__STATIC__/weixin/plug/dropload/dropload.css" /> 
+  <script src="__STATIC__/weixin/plug/dropload/dropload.min.js"></script> 
+  <script type="text/javascript">
+setTimeout(function () {
+    $(".dropload-down").css('paddingBottom', 88 + 'px');
+}, 1);
+$(function () {
+    clockAuto();
+    var startnum = 0;
+    $('.order').dropload({
+        scrollArea: window,
+        loadDownFn: function (me) {
+            var url = "{:U('User/getOrder')}";
+           // $("#pages a").each(function (i) {
+              //  if ($(this).attr("rel") == "next") {
+                 //   url = $(this).attr("href");
+               // }
+           // });
+            if (url) {
+            	startnum = startnum+5;
+            	var status = '{$orderstatus}';
+                $.ajax({
+                        type: 'GET',
+                        url: url,
+                        data:{startnum:startnum,status:status},
+                        dataType: 'json',
+                        success: function (data) {
+                           // $("#pages").html(data.pages);
+                           // var avatar_url = "__STATIC__/weixin/uploads/";
+                            var result = '';
+                            var time = "1460035587";
+                            var cancel_url = "{:U('Index/orderCance')}";
+                            var pay_url = "{:U('Pay/index')}";
+                            var coach_url = "{:U('Index/orderDetail')}";
+                            var finish_url = "../wechat/orderFinish";
+                           // var update_url = "../wechat/updateOrder";
+                            var user = "";
+                          //  var cancel_update_url = "../wechat/cancelUpdate";
+                            var order_info = "{:U('Index/orderDetail')}";
+                            if (data.data.length > 0){
+                                $.each(data.data, function (i, item) {
+                                    var avg_scro = 5;
+                                    result += '<li class="opacity">';
+                                    result += '<h3>'+item.add_time+'';
+                                    if(item.status==0){
+                                    	//alert(item.left_time);
+                                        result += '<span data-ymds="'+item.left_time+'">剩余支付时间：<s order_id="'+item.order_id+'" class="minute">0</s>分<s class="second">0</s>秒</span>';
+                                    }else if(item.status==1){
+                                        result += '<span>已支付</span>';
+                                    }else if(item.status==2){
+                                        result += '<span>服务中</span>';
+                                    }else if(item.status==3){
+                                        result += '<span>已完成</span>';
+                                    }else if(item.status==4){
+                                        result += '<span>已取消</span>';
+                                    }
+                                    result += '</h3>';
+                                    result += '<a href="'+order_info+'?id='+item.order_id+'"><div class="bg">';
+                                    result += '<div class="l"><span>';
+                                    if(item.avatar) {
+                                        result += '<img src="'+item.avatar+'"/>';
+                                    }else{
+                                       // result += '<img src="'+avatar_url+'avatar.jpg"/>';
+                                    }
+                                    result += '</span></div>';
+                                    result += '<div class="c">';
+                                    result += '<h4>'+item.trainer_name+'<b>'+item.teaching_type+'</b></h4>';
+                                    result += '<h5><span class="star_32x22"><s class="star'+item.star+'"></s></span></h5>';
+                                    
+                                    result += '<p class="time">'+item.time_text+'</p>';
+                                    result += '</div>';
+                                    result += '</div></a>';
+                                    result +='<div class="price">合计金额:<b>￥'+item.total_fee+'元</b></div>';
+                                    result += '<div class="btnGroup">';
+                                   // if(item.order_type==0){
+                                        if(item.status==0){
+                                            result += '<a href="javasript:void(0)" orderid="'+item.order_id+'" class="btn-cancel">取消订单</a>'
+                                        }
+                                        if(item.status==0){
+                                            result += '<a href="'+pay_url+'?id='+item.order_id+'" class="btn-pay">　支付　</a>';
+                                        }
+                                        if(item.status==1){
+                                            result += '<a href="javasript:void(0)" orderid="'+item.order_id+'" class="btn-cancel">取消订单</a>'
+                                        }
+                                        if(item.status==1){
+                                            result += '<a href="#" class="btn-pay">　已支付　</a>';
+                                        }
+                                       
+                                        if(item.status==2){
+                                            result += '<a href="javasript:void(0)" class=" btn-pay">　服务中　</a>';
+                                        }
+                                        
+                                        if(item.status==3){
+                                            result += '<a href="#" class="btn-pay">已完成　</a>';
+                                        }
+                                        
+                                        if(item.status==-1){
+                                            result += '<a href="javasript:void(0)" orderid="'+item.order_id+'" class="btn-del">删除订单</a>'
+                                        }
+                                        if(item.status==-1){
+                                            result += '<a href="#" class="btn-pay">　已取消　</a>';
+                                        }
+                                       
+                                   // }
+                                       // if(item.status==5||item.status==4||(item.status==3&&item.is_pay==1)){
+                                          //  result += '<a href="'+coach_url+'?id='+item.coach_id+'" class="btn-pay">再次预约</a>';
+                                       // }
+                                       // if(item.status==2){
+                                           // result += '<a href="'+finish_url+'?id='+item.id+'" class="btn-pay">完成训练</a>';
+                                       // }
+
+                                    result += '</div>';
+                                    result += '<div class="blank"></div>';
+                                    result += '</li>';
+                                });
+                               // clockAuto();
+                            } else {
+                            	 me.resetload();
+                                 $(".dropload-refresh").html("没有数据了");
+                                return false;
+                            }
+                            setTimeout(function () {
+                                $('.tabCon ul').append(result);
+                                //imgBg();
+                                clockAuto();
+                                me.resetload();
+                            }, 1000);
+                        },
+                        error: function (xhr, type) {
+                            me.resetload();
+                            $(".dropload-refresh").html("没有数据了");
+                        }
+                });
+            } else {
+                me.resetload();
+                $(".dropload-refresh").html("没有数据了");
+            }
+        }
+    });
+    
+    //接单
+    $('.tabCon').delegate('.btn-cancel','click',function(){
+    	var orderid = $(this).attr('orderid');
+    	//alert(orderid);
+    	if(confirm('是否确定接收订单？')){
+    		receiveOrder(orderid);
+    	}
+    	
+    })
+    
+
+    
+    //删除订单
+    $('.tabCon').delegate('.btn-del','click',function(){
+    	var orderid = $(this).attr('orderid');
+    	//alert(orderid);
+    	if(confirm('是否确定删除订单？')){
+    		delOrder(orderid);
+    	}
+    	
+    })
+    
+});
+function countDown(time, id) {
+if(time){
+        var minute_elem = $(id).find('.minute');
+        var second_elem = $(id).find('.second');
+        var order_id = $(id).find('.minute').attr('order_id');
+        //alert(order_id);
+        var end_time = new Date(time).getTime(), //月份是实际月份-1
+        sys_second = (end_time - new Date().getTime()) / 1000;
+      
+        var timer = setInterval(function() {
+            if (sys_second > 1) {
+                    sys_second -= 1;
+                    var minute = Math.floor((sys_second / 60) % 60);
+                    var second = Math.floor(sys_second % 60);
+                    $(minute_elem).text(minute < 10 ? "0" + minute : minute); //计算分钟
+                
+                    $(second_elem).text(second < 10 ? "0" + second : second); //计算秒杀
+                    if(second==0&&minute==0){
+                        cancelOrder(order_id);
+                        $(id).parent().parent().parent().remove();
+                    }
+            } else {
+                    $(id).parent().parent().parent().remove();
+                    cancelOrder(order_id);
+                    clearInterval(timer);
+            }
+        }, 1000);
+}
+
+}
+function receiveOrder(id){
+    $.post("{:U('Index/orderReceive')}",{orderid:id},function(data){
+    	//alert();
+			if(data.status == 1){
+				window.location.reload();
+			}else{
+				alert(data.msg);
+			}
+    },'json');
+}
+
+function delOrder(id){
+    $.post("{:U('Index/orderDel')}",{orderid:id},function(data){
+    	//alert();
+			if(data.status == 1){
+				window.location.reload();
+			}else{
+				alert(data.msg);
+			}
+    },'json');
+}
+function clockAuto() {
+            $(".tabCon h3>span").each(function() {
+                var YMDS = $(this).attr('data-ymds');
+                countDown(YMDS, $(this));
+        });
+    }
+</script>  
+</notempty>
+ </body>
+</html>

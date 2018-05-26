@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>微信支付</title>
+    <script src="__STATIC__/weixin/js/viewport.js"></script>
+    <link href="__STATIC__/weixin/css/common.css" rel="stylesheet"/>
+    <style>
+      .money{color:#f18a39;font-size:34px;padding:20px}
+	  .banner{background:#f0f0f0;height:30px}
+	  .wxicon{background:url(__STATIC__/weixin/img/wx.png) no-repeat;height:70px;}
+      .pay{
+      	 margin-top:20px;
+      	 padding-left:20px;
+		}
+    </style>
+</head>
+<body>
+<div class="title"><img src="__STATIC__/weixin/img/txt-xy.png"/>
+    <a href="javascript:history.go(-1);" class="back"></a>
+</div>
+<div class="money">
+   订单总额:500元
+</div>
+<div class="banner"></div>
+<div class="pay">
+  <ul>
+   <li>
+   <img src="__STATIC__/weixin/img/wx.png" />
+   <span>微信支付</span><span><input type="radio" value="1"></span></li>
+  </ul>
+</div>
+</body>
+<script src="__STATIC__/weixin/plug/jquery/jquery-1.10.2.min.js"></script>
+<script src="__STATIC__/weixin/js/common.js"></script>
+
+</html>

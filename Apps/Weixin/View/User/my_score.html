@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+ <head> 
+  <meta charset="utf-8" /> 
+  <title>评分</title> 
+  <meta name="apple-mobile-web-app-capable" content="yes" /> 
+  <meta name="apple-touch-fullscreen" content="yes" /> 
+  <meta name="full-screen" content="no" /> 
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" /> 
+  <meta name="format-detection" content="telephone=no" /> 
+  <meta name="format-detection" content="address=no" /> 
+  <script src="__STATIC__/weixin/js/viewport.js"></script> 
+  <link href="__STATIC__/weixin/css/common.css" rel="stylesheet" /> 
+  <script src="__STATIC__/weixin/js/jquery-1.10.2.min.js"></script> 
+  <script src="__STATIC__/weixin/js/common.js"></script> 
+ </head> 
+ <body> 
+  <div class="chooseCoach"> 
+   <div class="wrap_pingfen"> 
+    <div class="title">
+     <img src="__STATIC__/weixin/img/txt-zhpf.png" /> 
+     <a href="javascript:;" onclick="window.history.back()" class="back"></a> 
+    </div> 
+    <div class="box"> 
+     <p class="pfRen">{$userinfo.user_nickname}/<eq name="userinfo.sex" value="1">男<else />女</eq>（{$userinfo.mobile}）</p> 
+     <h2><span class="tit1">综合得分</span></h2> 
+     <div class="progress"> 
+      <ul> 
+       <li> 
+        <div class="progress-bar1">
+         <s></s>
+         <i>基本功</i>
+        </div> <span><i>{$basic_skill}</i><b>分</b></span> </li> 
+       <li> 
+        <div class="progress-bar2">
+         <s></s>
+         <i>协调性</i>
+        </div> <span><i>{$coordinate}</i><b>分</b></span> </li> 
+       <li> 
+        <div class="progress-bar3">
+         <s></s>
+         <i>手感</i>
+        </div> <span><i>{$feel}</i><b>分</b></span> </li> 
+       <li> 
+        <div class="progress-bar4">
+         <s></s>
+         <i>身体素质</i>
+        </div> <span><i>{$body}</i><b>分</b></span> </li> 
+       <li> 
+        <div class="progress-bar5">
+         <s></s>
+         <i>学习能力 </i>
+        </div> <span><i>{$study}</i><b>分</b></span> </li> 
+      </ul> 
+     </div> 
+    </div> 
+    <div class="tabTit_global"> 
+     <ul class="cf">
+      <li class="hover"><span>教练评价</span>
+       <s></s></li>
+     </ul> 
+    </div> 
+    <div class="box"> 
+     <div class="pjList"> 
+      <ul> 
+       <volist name="comment" id="vo">
+        <li>
+         <h4>{$vo.trainer_name}<span>{$vo.time|date='Y=m-d H:i',###}</span></h4>
+         <p>{$vo.content}</p>
+        </li>
+        </volist>
+      </ul> 
+     </div> 
+    </div> 
+   </div> 
+  </div> 
+  <div id="pages" style="display:none"> 
+  </div> 
+  <link rel="stylesheet" type="text/css" href="__STATIC__/weixin/plug/dropload/dropload.css" /> 
+  <script src="__STATIC__/weixin/plug/dropload/dropload.min.js"></script> 
+  <script>
+$(function () {
+    setTimeout(function () {
+        $(".dropload-down").css('paddingBottom', 88 + 'px');
+    }, 1);
+    var startnum = 0;
+    $('.chooseCoach').dropload({
+        scrollArea: window,
+        loadDownFn: function (me) {
+            var url = "{:U('User/getComment')}";
+           // $("#pages a").each(function (i) {
+               // if ($(this).attr("rel") == "next") {
+                  //  url = $(this).attr("href");
+               // }
+           // });
+            if (url) {
+            	startnum = startnum+5;
+                $.ajax({
+                    type: 'post',
+                    url: url,
+                    data:{startnum:startnum},
+                    dataType: 'json',
+                    success: function (data) {
+                       // $("#pages").html(data.pages);
+                        var result = '';
+                        if (data.data.length > 0) {
+                            $.each(data.data, function (i, item) {
+                                result+='<li>'
+                                result+='<h4>'+item.trainer_name+'<span>'+trans_php_time_to_str(item.time,1)+'</span></h4>'
+                                result+='<p>'+item.content+'</p>'
+                                result+='</li>'
+                            });
+                        }else{
+                        	 me.resetload();
+                             $(".dropload-refresh").html("没有数据了");
+                            return false;
+                        }
+                        $(".dropload-down").css('paddingBottom', 88 + 'px')
+                        setTimeout(function () {
+                            $('.pjList ul').append(result);
+                            imgBg();
+                            me.resetload();
+                        }, 1000);
+                    },
+                    error: function (xhr, type) {
+                        me.resetload();
+                        $(".dropload-refresh").html("没有数据了");
+                    }
+                });
+            } else {
+                me.resetload();
+                $(".dropload-refresh").html("没有数据了");
+            }
+        }
+    });
+});
+    </script>  
+ </body>
+</html>
