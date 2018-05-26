@@ -5,10 +5,10 @@
  */
 return array(
 	'DB_TYPE'			 => 'mysqli',
-	'DB_HOST'			 => '118.89.196.141',
-	'DB_NAME'			 => 'trainer',
-	'DB_USER'			 => 'root',
-	'DB_PWD'			 => '',
+	'DB_HOST'			 => 'xx',
+	'DB_NAME'			 => 'xx',
+	'DB_USER'			 => 'xx',
+	'DB_PWD'			 => 'xx',
 	'DB_PORT'			 => '3306',
 	'DB_PREFIX'			 => 'sp_',
 	/* Default Module */
