@@ -9,4 +9,4 @@
     2）Apps/static/data
     3）Apps/Common/Conf/config.php
     4）Apps/Log
-    4）Wxpay/logs
+    5）Wxpay/logs
